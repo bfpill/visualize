@@ -1,0 +1,77 @@
+.square {
+    width: 128px;
+    height: 128px;
+  }
+  
+  .white {
+    background-color: white;
+  }
+  
+  .black {
+    background-color: gray;
+  }
+  
+  .light-square-clicked {
+    animation: light-pulse 0.5s;
+  }
+  
+  .black-square-clicked {
+    animation: black-pulse 0.5s;
+  }
+  
+  .black-secret-square-clicked {
+    animation: black-red-pulse 0.5s;
+  }
+  
+  .white-secret-square-clicked {
+    animation: white-red-pulse 0.5s;
+  }
+  
+  
+  @keyframes black-pulse {
+    0% {
+      background-color: grey;
+    }
+    50% {
+      background-color:  rgb(99, 99, 99);
+    }
+    100% {
+      background-color: grey;
+    }
+  }
+  
+  @keyframes black-red-pulse {
+    0% {
+      background-color: grey;
+    }
+    50% {
+      background-color:  rgb(255, 94, 94);
+    }
+    100% {
+      background-color: grey;
+    }
+  }
+  
+  @keyframes white-red-pulse {
+    0% {
+      background-color: rgb(255, 255, 255);
+    }
+    50% {
+      background-color:  rgb(255, 94, 94);
+    }
+    100% {
+      background-color: rgb(255, 255, 255);
+    }
+  }
+  
+  @keyframes light-pulse {
+    0% {
+      background-color: #fff;
+    }
+    50% {
+      background-color: #d9d9d9;
+    }
+    100% {
+      background-color: #fff;
+    }
+  }

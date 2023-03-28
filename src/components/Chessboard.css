@@ -1,86 +1,61 @@
 .chessboard {
+  display: flex;
+  flex-wrap: wrap;
+  width: 512px;
+  height: 512px;
+  border: 2px solid black;
+  margin-top: 20px;
+}
+
+.chessboard-container { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sideBySide {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media only screen and (min-width: 720px) {
+
+  .sideBySide {
     display: flex;
     flex-wrap: wrap;
-    width: 512px;
-    height: 512px;
-    border: 2px solid black;
-    margin-top: 20px;
+    justify-content: center;
+    flex-direction: row-reverse;
   }
-  
-  .square {
-    width: 128px;
-    height: 128px;
+
+  .chessboard-container {
+    flex-direction: row;
+    justify-content: center;
   }
-  
-  .white {
-    background-color: white;
-  }
-  
-  .black {
-    background-color: gray;
-  }
-  
-  .light-square-clicked {
-    animation: light-pulse 0.5s;
-  }
-  
-  .black-square-clicked {
-    animation: black-pulse 0.5s;
-  }
-  
-  .black-secret-square-clicked {
-    animation: black-red-pulse 0.5s;
-  }
-  
-  .white-secret-square-clicked {
-    animation: white-red-pulse 0.5s;
-  }
-  
-  
-  @keyframes black-pulse {
-    0% {
-      background-color: grey;
-    }
-    50% {
-      background-color:  rgb(99, 99, 99);
-    }
-    100% {
-      background-color: grey;
-    }
-  }
-  
-  @keyframes black-red-pulse {
-    0% {
-      background-color: grey;
-    }
-    50% {
-      background-color:  rgb(255, 94, 94);
-    }
-    100% {
-      background-color: grey;
-    }
-  }
-  
-  @keyframes white-red-pulse {
-    0% {
-      background-color: rgb(255, 255, 255);
-    }
-    50% {
-      background-color:  rgb(255, 94, 94);
-    }
-    100% {
-      background-color: rgb(255, 255, 255);
-    }
-  }
-  
-  @keyframes light-pulse {
-    0% {
-      background-color: #fff;
-    }
-    50% {
-      background-color: #d9d9d9;
-    }
-    100% {
-      background-color: #fff;
-    }
-  }
+}
+
+.bottom-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 512px;
+}
+
+.button {
+  background-color: #f2f2f2;
+  border: none;
+  color: #333;
+  margin-left: 27px;
+  margin-top: 30px;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  height: 20px;
+}
+
+.button:hover {
+  background-color: #ddd;
+}
+
+.button:focus {
+  outline: none;
+}

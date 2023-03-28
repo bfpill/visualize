@@ -1,91 +1,86 @@
 import { useState } from "react";
 import ChessPiece from "./ChessPiece";
-import "./Chessboard.css"
+import Square from "./Square";
+import "./Chessboard.css";
+import MoveHistory from "./MoveHistory";
 
-function Square({ piece, color, key, index, onClick }) {
-    const [isDark, setIsDark] = useState(false);
+function Chessboard() {
+  const [moveHistory, setMoveHistory] = useState([]);
 
-    function handleClick(e) {
-      if(index === "2,2"){
-        if(color === 'white'){
-          e.target.classList.add('white-secret-square-clicked');
-          setTimeout(() => {
-            e.target.classList.remove('white-secret-square-clicked');
-          }, 300);
-        }
-        if(color === 'grey'){
-          e.target.classList.add('black-secret-square-clicked');
-          setTimeout(() => {
-            e.target.classList.remove('black-secret-square-clicked');
-          }, 200);
-        }
-      }
-      if(color === 'white'){
-        e.target.classList.add('light-square-clicked');
-        setTimeout(() => {
-          e.target.classList.remove('light-square-clicked');
-        }, 200);
-      }
-      if(color === 'grey'){
-        e.target.classList.add('black-square-clicked');
-        setTimeout(() => {
-          e.target.classList.remove('black-square-clicked');
-        }, 200);
-      }
-    }
+  const [rows, setRows] = useState([
+    ["Bishop", "none", "none", "none"],
+    ["none", "Queen", "none", "none"],
+    ["none", "none", "none", "none"],
+    ["none", "none", "Queen", "none"],
+  ]);
   
-    const squareStyle = {
-      backgroundColor: isDark ? '#777' : color,
-    };
+  const [cornerColor, setCornerColor] = useState("White");
+  const [board, setBoard] = useState([[]]);
 
-    return (
-      <div className="square" style={squareStyle} onClick={handleClick}>
-        <ChessPiece piece={piece} color={color} />
-      </div>
-    )
-}
-  
-  function Chessboard() {
+  function handleClick(row, col) {
+    console.log(`Square ${row},${col} clicked!`);
+  }
+
+  function handleReverseRows() {
+    setRows(swapRows(rows));
+    setBoard(buildB());
+    setMoveHistory([...moveHistory, "Reversed Rows"]);
+  }
+
+
+  function handleReverseColumns() {
+    setRows(reverseColumns(rows));
+    setBoard(buildB());
+    setMoveHistory([...moveHistory, "Reversed Columns"]);
+  }
+
+  function reverseColumns(rows){
+    setCornerColor(cornerColor == "white" ? "black" : "white");
+    return rows.map(row => row.reverse());
+  }
+
+  function swapRows(rows){
+    setCornerColor(cornerColor == "white" ? "black" : "white");
+    return rows.reverse();
+  }
+
+  function buildB() {
     const squares = [];
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        const squareColor = (i + j) % 2 === 0 ? 'white' : 'grey';
-        if(i === 1 && j === 2){
-          squares.push(
-            <Square
-              piece='Queen'
-              color={squareColor}
-              key={`${i},${j}`}
-              index={`${i},${j}`}
-              onClick={() => console.log(`Square ${i},${j} clicked!`)}
-            />
-          );
-          }
-        else if(i === 0 && j === 1){
-          squares.push(
-            <Square
-              piece='Bishop'
-              color={squareColor}
-              key={`${i},${j}`}
-              index={`${i},${j}`}
-              onClick={() => console.log(`Square ${i},${j} clicked!`)}
-            />
-          );
-          }
-        else{   
+        const squareColor = cornerColor === "white" ? ((i + j) % 2 === 0 ? "white" : "grey") : ((i + j + 1) % 2 === 0 ? "white" : "grey") ;
+        const piece = rows[j][i];
         squares.push(
           <Square
-            piece='none'
+            piece={piece}
             color={squareColor}
             key={`${i},${j}`}
             index={`${i},${j}`}
-            onClick={() => console.log(`Square ${i},${j} clicked!`)}
+            onClick={() => handleClick(i, j)}
           />
         );
-        }
       }
     }
-    return <div className="chessboard">{squares}</div>;
+    return squares;
   }
+
+  return (
+    <>
+    <div className="sideBySide">
+      <div className="chessBoardContainer">
+        <div className="chessboard">{board}</div>
+      </div>
+      
+      <MoveHistory moveHistory={moveHistory}/>
+    </div>
+    
+    <div className="bottom-container"> 
+        <button onClick={handleReverseRows} className = 'button'>Reverse Rows</button>
+        <button onClick={handleReverseColumns} className = 'button'>Reverse Columns</button>
+    <div/>
+      </div>
+    </>
+  );
+}
 
 export default Chessboard;

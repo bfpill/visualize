@@ -1,0 +1,45 @@
+.history-container {
+    width: 150px;
+    height: 447px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-right: 30px;
+  }
+  .overall-container {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .history-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .move {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  
+  .move p:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .move p:first-of-type {
+    margin-top: 10;
+  }
+
+  @media only screen and (max-width: 757px) {
+    .history-container {
+        width: 494px;
+        height: 70px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 0px;
+      }
+      .overall-container {
+        width: 516px;
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+  }

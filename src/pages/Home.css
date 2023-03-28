@@ -3,3 +3,33 @@
   flex-direction: column;
   align-items: center;
 }
+
+.titleContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: row-reverse;
+  width: 100%;
+}
+.home h1{
+  font-weight: 400;
+  width: 720px;
+  text-align: left;
+}
+
+
+@media only screen and (max-width: 757px) {
+
+  .titleContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: row-reverse;
+  }
+
+  .home h1{
+    width: auto;
+    font-weight: 400;
+    text-align: left;
+  }
+}
