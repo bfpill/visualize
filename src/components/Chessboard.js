@@ -56,21 +56,21 @@ function Chessboard() {
   function handleFlipBoard() {
     setRows(reverseColumns(rows));
     setRows(swapRows(rows));
-    setBoard(buildB(5, rows));
+    setBoard(buildB(5, rows, tilesHidden));
     setMoveHistory([...moveHistory, "Flipped Board"])
   }
 
   function handleReverseRows() {
     setCornerColor(cornerColor === "white" ? "black" : "white");
     setRows(swapRows(rows));
-    setBoard(buildB(5, rows));
+    setBoard(buildB(5, rows, tilesHidden));
     setMoveHistory([...moveHistory, "Reversed Rows"]);
   }
 
   function handleReverseColumns() {
     setCornerColor(cornerColor === "white" ? "black" : "white");
     setRows(reverseColumns(rows));
-    setBoard(buildB(5, rows));
+    setBoard(buildB(5, rows, tilesHidden));
     setMoveHistory([...moveHistory, "Reversed Columns"]);
   }
 
@@ -96,7 +96,7 @@ function Chessboard() {
     const color = Math.floor(Math.random() * 2) === 0 ? "black" : "white";
     let val = addPiece(rows, piece, color);
     val != false ? setRows(val[0]) : (val = "ERROR");
-    setBoard(buildB(5, rows));
+    setBoard(buildB(5, rows, tilesHidden));
     let str = "Added a " + piece + " on " + val[1];
     setMoveHistory([...moveHistory, str]);
   }
