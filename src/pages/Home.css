@@ -1,9 +1,5 @@
-.App {
-    text-align: center;
-  }
-
-  .sideways-container {
-    flex-direction: row;
-    display: flex;
-  }
-  
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

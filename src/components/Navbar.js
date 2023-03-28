@@ -5,8 +5,8 @@ import "./Navbar.css";
 function Navbar() {
   return (
     <nav className="navbar">
-        <Link onClick={""} to="/">Home</Link>
-        <Link onClick={""} to="/About">Visualize</Link>
+        <Link onClick={""} to="/" className='nav-link'>Chess</Link>
+        <Link onClick={""} to="/About" className='nav-link'>Visualize</Link>
     </nav>
   );
 }
