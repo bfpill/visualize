@@ -18,13 +18,12 @@ function Chessboard() {
 
   const [cornerColor, setCornerColor] = useState("white");
   const [board, setBoard] = useState([[]]);
- // empty dependency array means this effect runs only once on first render
-
-  const [hidden, setHidden] = useState(false);
-  
+  const [piecesHidden, setPiecesHidden] = useState(false);
+  const [tilesHidden, setTilesHidden] = useState(false);
 
   const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen"];
 
+  // empty dependency array means this effect runs only once on first render
   useEffect(() => {
     // Call buildB function on the first render
     setBoard(buildB(5, rows));
@@ -36,6 +35,29 @@ function Chessboard() {
 
   function handleClick(row, col) {
     console.log(`Square ${row},${col} clicked!`);
+  }
+
+  function handleHideBoard() {
+    setPiecesHidden(true);
+  }
+
+  function handleShowBoard() {
+    setPiecesHidden(false);
+  }
+
+  function reverseColumns(rows) {
+    return rows.map((row) => row.reverse());
+  }
+
+  function swapRows(rows) {
+    return rows.reverse();
+  }
+
+  function handleFlipBoard() {
+    setRows(reverseColumns(rows));
+    setRows(swapRows(rows));
+    setBoard(buildB(5, rows));
+    setMoveHistory([...moveHistory, "Flipped Board"])
   }
 
   function handleReverseRows() {
@@ -52,17 +74,34 @@ function Chessboard() {
     setMoveHistory([...moveHistory, "Reversed Columns"]);
   }
 
+  function handleResetBoard(){
+    setRows(emptyArr);
+    setMoveHistory([]);
+    
+    setBoard(buildB(5, emptyArr));
+  }
+
+  function handleHideTiles(){
+    setTilesHidden(true);
+    setBoard(buildB(5, rows, true));
+  }
+
+  function handleShowTiles(){
+    setTilesHidden(false);
+    setBoard(buildB(5, rows, false));
+  }
   function handleAddPiece() {
     //Select a random index from Pieces[]
     const piece = pieces[Math.floor(Math.random() * pieces.length)];
-    let val = addPiece(rows, piece);
+    const color = Math.floor(Math.random() * 2) === 1 ? "black" : "white";
+    let val = addPiece(rows, piece, color);
     val != false ? setRows(val[0]) : (val = "ERROR");
     setBoard(buildB(5, rows));
     let str = "Added a " + piece + " on " + val[1];
     setMoveHistory([...moveHistory, str]);
   }
 
-  function addPiece(rows, piece) {
+  function addPiece(rows, piece, color) {
     let arr = [];
     arr = rows;
     // Create an array to store empty indices
@@ -85,28 +124,13 @@ function Chessboard() {
     // Select a random empty index and set it to the given value
     const [randRow, randCol] =
       emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+      
     arr[randRow][randCol] = piece;
 
     return [arr, [(randCol + 1) , (arr.length - randRow )]];
   }
 
-  function handleHideBoard() {
-    setHidden(true);
-  }
-
-  function handleShowBoard() {
-    setHidden(false);
-  }
-
-  function reverseColumns(rows) {
-    return rows.map((row) => row.reverse());
-  }
-
-  function swapRows(rows) {
-    return rows.reverse();
-  }
-
-  function buildB(size, arr) {
+  function buildB(size, arr, hideTiles) {
     const squares = [];
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
@@ -117,7 +141,7 @@ function Chessboard() {
         squares.push(
           <Square
             piece={piece}
-            color={squareColor}
+            color={(hideTiles) ? 'white' : squareColor}
             key={`${i},${j}`}
             index={`${i},${j}`}
             onClick={() => handleClick(i, j)}
@@ -128,18 +152,11 @@ function Chessboard() {
     return squares;
   }
 
-  function handleResetBoard(){
-    setRows(emptyArr);
-    setMoveHistory([]);
-    
-    setBoard(buildB(5, emptyArr));
-  }
-
   return (
     <>
       <div className="sideBySide">
         <div className="chessBoardContainer">
-          {hidden ? (
+          {piecesHidden ? (
             <div className="hiddenBoard" />
           ) : (
             <div className="chessboard">{board}</div>
@@ -156,7 +173,7 @@ function Chessboard() {
         <button onClick={handleReverseColumns} className="button">
           Reverse Columns
         </button>
-        {hidden ? (
+        {piecesHidden ? (
           <button onClick={handleShowBoard} className="button">
             Show Board
           </button>
@@ -165,15 +182,25 @@ function Chessboard() {
             Hide Board
           </button>
         )}
+        {tilesHidden ? (
+          <button onClick={handleShowTiles} className="button">
+          Show Tiles
+          </button>
+        ) : (
+          <button onClick={handleHideTiles} className="button">
+          Hide Tiles
+        </button>
+        )}
         <button onClick={handleAddPiece} className="button">
           Add Piece
         </button>
-        <button onClick={handleReverseColumns} className="button">
+        <button onClick={handleFlipBoard} className="button">
           Flip Board
         </button>
         <button onClick={handleResetBoard} className="button">
           Reset Board
         </button>
+
         <div />
       </div>
     </>

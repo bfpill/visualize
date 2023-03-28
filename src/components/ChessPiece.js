@@ -9,7 +9,7 @@ function ChessPiece({ piece, color }) {
         <img
           classname={piece}
           src={require("../svgs/WhiteQueen.svg").default}
-          style={{ width: "105px", height: "105px" }}
+          style={{ width: "103px", height: "103px" }}
         />
       );
     }
@@ -18,7 +18,7 @@ function ChessPiece({ piece, color }) {
           <img
             classname={piece}
             src={require("../svgs/WhitePawn.svg").default}
-            style={{ width: "105px", height: "105px" }}
+            style={{ width: "103px", height: "103px" }}
           />
         );
       }
@@ -27,7 +27,7 @@ function ChessPiece({ piece, color }) {
           <img
             classname={piece}
             src={require("../svgs/WhiteRook.svg").default}
-            style={{ width: "105px", height: "105px" }}
+            style={{ width: "103px", height: "103px" }}
           />
         );
       }
@@ -36,7 +36,7 @@ function ChessPiece({ piece, color }) {
         <img
           classname={piece}
           src={require("../svgs/WhiteBishop.svg").default}
-          style={{ width: "105px", height: "105px" }}
+          style={{ width: "103px", height: "103px" }}
         />
       );
     }
@@ -45,7 +45,7 @@ function ChessPiece({ piece, color }) {
           <img
             classname={piece}
             src={require("../svgs/WhiteKnight.svg").default}
-            style={{ width: "105px", height: "105px" }}
+            style={{ width: "103px", height: "103px" }}
           />
         );
       }
@@ -57,7 +57,7 @@ function ChessPiece({ piece, color }) {
         <img
           classname={piece}
           src={require("../svgs/BlackQueen.svg").default}
-          style={{ width: "105px", height: "105px" }}
+          style={{ width: "103px", height: "103px" }}
         />
       );
     }
@@ -66,7 +66,7 @@ function ChessPiece({ piece, color }) {
           <img
             classname={piece}
             src={require("../svgs/BlackPawn.svg").default}
-            style={{ width: "105px", height: "105px" }}
+            style={{ width: "103px", height: "103px" }}
           />
         );
       }
@@ -75,7 +75,7 @@ function ChessPiece({ piece, color }) {
           <img
             classname={piece}
             src={require("../svgs/BlackRook.svg").default}
-            style={{ width: "105px", height: "105px" }}
+            style={{ width: "103px", height: "103px" }}
           />
         );
       }
@@ -84,7 +84,7 @@ function ChessPiece({ piece, color }) {
         <img
           classname={piece}
           src={require("../svgs/BlackBishop.svg").default}
-          style={{ width: "105px", height: "105px" }}
+          style={{ width: "103px", height: "103px" }}
         />
       );
     }
@@ -93,7 +93,7 @@ function ChessPiece({ piece, color }) {
           <img
             classname={piece}
             src={require("../svgs/BlackKnight.svg").default}
-            style={{ width: "105px", height: "105px" }}
+            style={{ width: "103px", height: "103px" }}
           />
         );
       }
