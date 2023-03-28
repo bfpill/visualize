@@ -3,8 +3,8 @@ import "./ChessPiece.css";
 
 function ChessPiece({ piece, color }) {
 
-  if (color === "white") {
-    if (piece === "Queen") {
+  if (piece.color === "white") {
+    if (piece.name === "Queen") {
       return (
         <img
           classname={piece}
@@ -13,7 +13,7 @@ function ChessPiece({ piece, color }) {
         />
       );
     }
-    if (piece === "Pawn") {
+    if (piece.name === "Pawn") {
         return (
           <img
             classname={piece}
@@ -22,7 +22,7 @@ function ChessPiece({ piece, color }) {
           />
         );
       }
-      if (piece === "Rook") {
+      if (piece.name === "Rook") {
         return (
           <img
             classname={piece}
@@ -31,7 +31,7 @@ function ChessPiece({ piece, color }) {
           />
         );
       }
-    if (piece === "Bishop") {
+    if (piece.name === "Bishop") {
       return (
         <img
           classname={piece}
@@ -40,7 +40,7 @@ function ChessPiece({ piece, color }) {
         />
       );
     }
-    if (piece === "Knight") {
+    if (piece.name === "Knight") {
         return (
           <img
             classname={piece}
@@ -51,8 +51,8 @@ function ChessPiece({ piece, color }) {
       }
   }
 
-  if (color === "grey") {
-    if (piece === "Queen") {
+  if (piece.color === "black") {
+    if (piece.name === "Queen") {
       return (
         <img
           classname={piece}
@@ -61,7 +61,7 @@ function ChessPiece({ piece, color }) {
         />
       );
     }
-    if (piece === "Pawn") {
+    if (piece.name === "Pawn") {
         return (
           <img
             classname={piece}
@@ -70,7 +70,7 @@ function ChessPiece({ piece, color }) {
           />
         );
       }
-      if (piece === "Rook") {
+      if (piece.name === "Rook") {
         return (
           <img
             classname={piece}
@@ -79,7 +79,7 @@ function ChessPiece({ piece, color }) {
           />
         );
       }
-    if (piece === "Bishop") {
+    if (piece.name === "Bishop") {
       return (
         <img
           classname={piece}
@@ -88,7 +88,7 @@ function ChessPiece({ piece, color }) {
         />
       );
     }
-    if (piece === "Knight") {
+    if (piece.name === "Knight") {
         return (
           <img
             classname={piece}

@@ -93,7 +93,7 @@ function Chessboard() {
   function handleAddPiece() {
     //Select a random index from Pieces[]
     const piece = pieces[Math.floor(Math.random() * pieces.length)];
-    const color = Math.floor(Math.random() * 2) === 1 ? "black" : "white";
+    const color = Math.floor(Math.random() * 2) === 0 ? "black" : "white";
     let val = addPiece(rows, piece, color);
     val != false ? setRows(val[0]) : (val = "ERROR");
     setBoard(buildB(5, rows));
@@ -101,7 +101,11 @@ function Chessboard() {
     setMoveHistory([...moveHistory, str]);
   }
 
-  function addPiece(rows, piece, color) {
+  function addPiece(rows, p, color) {
+    const piece = {
+      name: p,
+      color: color
+    };
     let arr = [];
     arr = rows;
     // Create an array to store empty indices
@@ -124,7 +128,7 @@ function Chessboard() {
     // Select a random empty index and set it to the given value
     const [randRow, randCol] =
       emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-      
+
     arr[randRow][randCol] = piece;
 
     return [arr, [(randCol + 1) , (arr.length - randRow )]];
