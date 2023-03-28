@@ -16,7 +16,7 @@ function MoveHistory({ moveHistory }) {
         <div>
         {moveHistory[0]
           ? moveHistory.map((move, index) => <p key={index} className="move">{move}</p>)
-          : <p>No moves yet.</p>}
+          : <p className="move">No moves yet.</p>}
         </div>
     </div>
     </div>

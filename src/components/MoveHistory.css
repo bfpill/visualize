@@ -42,4 +42,10 @@
         margin-left: 20px;
         margin-right: 20px;
       }
+      .move {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        margin-left: 10px;
+      }
   }
