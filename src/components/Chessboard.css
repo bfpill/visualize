@@ -6,7 +6,12 @@
   border: 2px solid black;
   margin-top: 20px;
 }
-
+.hiddenBoard { 
+  width: 512px;
+  height: 512px;
+  border: 2px solid black;
+  margin-top: 20px;
+}
 .chessboard-container { 
   display: flex;
   flex-direction: column;

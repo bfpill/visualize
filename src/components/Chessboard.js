@@ -16,6 +16,7 @@ function Chessboard() {
   
   const [cornerColor, setCornerColor] = useState("White");
   const [board, setBoard] = useState([[]]);
+  const [hidden, setHidden] = useState(false);
 
   function handleClick(row, col) {
     console.log(`Square ${row},${col} clicked!`);
@@ -27,6 +28,12 @@ function Chessboard() {
     setMoveHistory([...moveHistory, "Reversed Rows"]);
   }
 
+  function handleHideBoard() {
+    setHidden(true);
+  }
+  function handleShowBoard() {
+    setHidden(false);
+  }
 
   function handleReverseColumns() {
     setRows(reverseColumns(rows));
@@ -68,7 +75,7 @@ function Chessboard() {
     <>
     <div className="sideBySide">
       <div className="chessBoardContainer">
-        <div className="chessboard">{board}</div>
+        {hidden ? <div className="hiddenBoard"/>: <div className="chessboard">{board}</div>}
       </div>
       
       <MoveHistory moveHistory={moveHistory}/>
@@ -77,6 +84,8 @@ function Chessboard() {
     <div className="bottom-container"> 
         <button onClick={handleReverseRows} className = 'button'>Reverse Rows</button>
         <button onClick={handleReverseColumns} className = 'button'>Reverse Columns</button>
+        {hidden ? <button onClick={handleShowBoard} className = 'button'>Show Board</button> 
+          : <button onClick={handleHideBoard} className = 'button' >Hide Board</button>}
     <div/>
       </div>
     </>
