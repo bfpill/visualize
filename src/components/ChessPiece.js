@@ -1,7 +1,13 @@
 import { useDrag } from 'react-dnd';
 import "./ChessPiece.css";
+import { useState } from 'react';
 
 function ChessPiece({ piece, color }) {
+
+  const handleDragStart = (event) => {
+    event.dataTransfer.setData("piece", piece);
+    event.dataTransfer.setData("color", color);
+  };
 
   if (piece.color === "white") {
     if (piece.name === "Queen") {
@@ -10,6 +16,8 @@ function ChessPiece({ piece, color }) {
           classname={piece}
           src={require("../svgs/WhiteQueen.svg").default}
           style={{ width: "103px", height: "103px" }}
+          draggable={true}
+          onDragStart={handleDragStart}
         />
       );
     }
@@ -19,6 +27,8 @@ function ChessPiece({ piece, color }) {
             classname={piece}
             src={require("../svgs/WhitePawn.svg").default}
             style={{ width: "103px", height: "103px" }}
+            draggable={true}
+            onDragStart={handleDragStart}
           />
         );
       }
@@ -28,6 +38,8 @@ function ChessPiece({ piece, color }) {
             classname={piece}
             src={require("../svgs/WhiteRook.svg").default}
             style={{ width: "103px", height: "103px" }}
+            draggable={true}
+            onDragStart={handleDragStart}
           />
         );
       }
@@ -37,6 +49,8 @@ function ChessPiece({ piece, color }) {
           classname={piece}
           src={require("../svgs/WhiteBishop.svg").default}
           style={{ width: "103px", height: "103px" }}
+          draggable={true}
+          onDragStart={handleDragStart}
         />
       );
     }
@@ -46,6 +60,8 @@ function ChessPiece({ piece, color }) {
             classname={piece}
             src={require("../svgs/WhiteKnight.svg").default}
             style={{ width: "103px", height: "103px" }}
+            draggable={true}
+            onDragStart={handleDragStart}
           />
         );
       }
