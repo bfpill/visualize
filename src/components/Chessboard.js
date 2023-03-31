@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Square from "./Square";
 import "./Chessboard.css";
-import audio from '../sounds/move-self.mp3'
+import addPieceSound from '../sounds/move-self.mp3'
+import click from '../sounds/click.wav'
 import MoveHistory from "./MoveHistory";
 
 function Chessboard() {
@@ -17,6 +18,7 @@ function Chessboard() {
 
   const [rows, setRows] = useState(emptyArr);
 
+  const [addingPieces, setAddingPieces] = useState(false);
   const [cornerColor, setCornerColor] = useState("white");
   const [board, setBoard] = useState([[]]);
   const [piecesHidden, setPiecesHidden] = useState(false);
@@ -34,6 +36,12 @@ function Chessboard() {
   useEffect(() => {
     handleResetBoard();
   }, []);
+
+  useEffect(() => {
+    if(!addingPieces){
+      new Audio(click).play();
+    }
+  });
 
   function handleClick(row, col) {
     console.log(`Square ${row},${col} clicked!`);
@@ -69,7 +77,7 @@ function Chessboard() {
     setRows(reverseColumns(rows));
     setRows(swapRows(rows));
     setBoard(buildB(5, rows, tilesHidden, piecesHidden));
-    setMoveHistory([...moveHistory, "Flipped Board"])
+    setMoveHistory([...moveHistory, "Flipped Board"]);
   }
 
   function handleReverseRows() {
@@ -89,7 +97,6 @@ function Chessboard() {
   function handleResetBoard(){
     setRows(emptyArr);
     setMoveHistory([]);
-    
     setBoard(buildB(5, emptyArr, tilesHidden, piecesHidden));
   }
 
@@ -104,6 +111,7 @@ function Chessboard() {
   }
   function handleAddPiece() {
     //Select a random index from Pieces[]
+    setAddingPieces(true);
     const piece = pieces[Math.floor(Math.random() * pieces.length)];
     const color = Math.floor(Math.random() * 2) === 0 ? "black" : "white";
 
@@ -118,7 +126,7 @@ function Chessboard() {
     else if(val == "BOARD FULL"){
       setMoveHistory([...moveHistory, ["Board is full"]]);
     }
-    
+    setAddingPieces(false);
   }
 
   function addPiece(rows, p, color, onDrop) {
@@ -153,7 +161,7 @@ function Chessboard() {
     arr[randRow][randCol] = piece;
     piece.index = [randRow, randCol];
 
-    new Audio(audio).play();
+    new Audio(addPieceSound).play();
 
     return [arr, [(randCol + 1) , (arr.length - randRow )]];
   }
