@@ -15,7 +15,11 @@ function MoveHistory({ moveHistory }) {
     <div className ="history-container" ref={historyBoxRef}>
         <div>
         {moveHistory[0]
-          ? moveHistory.map((move, index) => <p key={index} className="move">{move}</p>)
+          ? moveHistory.map((move) => {
+            move != "Board is full" ? 
+          <p key={move[0]} className="move">{move[1]}</p> : 
+          <p key={move[0]} className="invalidMove">{move[1]}</p> 
+        })
           : <p className="move">No moves yet.</p>}
         </div>
     </div>

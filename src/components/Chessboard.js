@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Square from "./Square";
 import "./Chessboard.css";
+import audio from '../sounds/move-self.mp3'
 import MoveHistory from "./MoveHistory";
 
 function Chessboard() {
@@ -107,11 +108,17 @@ function Chessboard() {
     const color = Math.floor(Math.random() * 2) === 0 ? "black" : "white";
 
     let val = addPiece(rows, piece, color);
-    val != false ? setRows(val[0]) : (val = "ERROR");
+    val != false ? setRows(val[0]) : (val = "BOARD FULL");
 
     setBoard(buildB(5, rows, tilesHidden, piecesHidden));
-    let str = "Added a " + piece + " on " + val[1];
-    setMoveHistory([...moveHistory, str]);
+    let pName = piece.name;
+    if(val != "BOARD FULL"){
+      setMoveHistory([...moveHistory, [val[1], pName]]);
+    }
+    else if(val == "BOARD FULL"){
+      setMoveHistory([...moveHistory, ["Board is full"]]);
+    }
+    
   }
 
   function addPiece(rows, p, color, onDrop) {
@@ -145,6 +152,8 @@ function Chessboard() {
 
     arr[randRow][randCol] = piece;
     piece.index = [randRow, randCol];
+
+    new Audio(audio).play();
 
     return [arr, [(randCol + 1) , (arr.length - randRow )]];
   }
