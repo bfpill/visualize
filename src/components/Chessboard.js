@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Square from "./Square";
 import "./Chessboard.css";
 import addPieceSound from '../sounds/move-self.mp3'
@@ -19,6 +19,7 @@ function Chessboard() {
   const [rows, setRows] = useState(emptyArr);
 
   const [addingPieces, setAddingPieces] = useState(false);
+  const prevAddingPiecesRef = useRef(false);
   const [cornerColor, setCornerColor] = useState("white");
   const [board, setBoard] = useState([[]]);
   const [piecesHidden, setPiecesHidden] = useState(false);
@@ -38,10 +39,14 @@ function Chessboard() {
   }, []);
 
   useEffect(() => {
-    if(!addingPieces){
+    if(addingPieces){
+      new Audio(addPieceSound).play();
+    }
+    else{
       new Audio(click).play();
     }
-  });
+    setAddingPieces(false);
+  },[rows, cornerColor, board, piecesHidden, boardHidden, tilesHidden]);
 
   function handleClick(row, col) {
     console.log(`Square ${row},${col} clicked!`);
@@ -126,7 +131,6 @@ function Chessboard() {
     else if(val == "BOARD FULL"){
       setMoveHistory([...moveHistory, ["Board is full"]]);
     }
-    setAddingPieces(false);
   }
 
   function addPiece(rows, p, color, onDrop) {
@@ -160,8 +164,6 @@ function Chessboard() {
 
     arr[randRow][randCol] = piece;
     piece.index = [randRow, randCol];
-
-    new Audio(addPieceSound).play();
 
     return [arr, [(randCol + 1) , (arr.length - randRow )]];
   }
