@@ -82,21 +82,21 @@ function Chessboard() {
     setRows(reverseColumns(rows));
     setRows(swapRows(rows));
     setBoard(buildB(5, rows, tilesHidden, piecesHidden));
-    setMoveHistory([...moveHistory, "Flipped Board"]);
+    setMoveHistory([...moveHistory, ["Flipped Board"]]);
   }
 
   function handleReverseRows() {
     setCornerColor(cornerColor === "white" ? "black" : "white");
     setRows(swapRows(rows));
     setBoard(buildB(5, rows, tilesHidden, piecesHidden));
-    setMoveHistory([...moveHistory, "Reversed Rows"]);
+    setMoveHistory([...moveHistory, ["Reversed Rows"]]);
   }
 
   function handleReverseColumns() {
     setCornerColor(cornerColor === "white" ? "black" : "white");
     setRows(reverseColumns(rows));
     setBoard(buildB(5, rows, tilesHidden, piecesHidden));
-    setMoveHistory([...moveHistory, "Reversed Columns"]);
+    setMoveHistory([...moveHistory, ["Reversed Columns"]]);
   }
 
   function handleResetBoard(){
@@ -122,11 +122,11 @@ function Chessboard() {
 
     let val = addPiece(rows, piece, color);
     val != false ? setRows(val[0]) : (val = "BOARD FULL");
-
+    let pName = val[2];
+    let index = val[1];
     setBoard(buildB(5, rows, tilesHidden, piecesHidden));
-    let pName = piece.name;
     if(val != "BOARD FULL"){
-      setMoveHistory([...moveHistory, [val[1], pName]]);
+      setMoveHistory([...moveHistory, [[pName], index]]);
     }
     else if(val == "BOARD FULL"){
       setMoveHistory([...moveHistory, ["Board is full"]]);
@@ -165,7 +165,7 @@ function Chessboard() {
     arr[randRow][randCol] = piece;
     piece.index = [randRow, randCol];
 
-    return [arr, [(randCol + 1) , (arr.length - randRow )]];
+    return [arr, [(randCol + 1) , (arr.length - randRow )], piece.name];
   }
 
   function buildB(size, arr, hideTiles, hidePieces) {

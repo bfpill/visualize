@@ -16,9 +16,9 @@ function MoveHistory({ moveHistory }) {
         <div>
         {moveHistory[0]
           ? moveHistory.map((move) => {
-            move != "Board is full" ? 
-          <p key={move[0]} className="move">{move[1]}</p> : 
-          <p key={move[0]} className="invalidMove">{move[1]}</p> 
+            return move[0] != "Board is full" ? 
+          (<p key={move} className="move">{move[1] != null ? ("Added " + move[0] + " on " + move[1]) : move[0]}</p>) : 
+          (<p key={move} className="invalidMove">{move[0]}</p>) 
         })
           : <p className="move">No moves yet.</p>}
         </div>
