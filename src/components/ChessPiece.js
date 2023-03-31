@@ -9,7 +9,7 @@ function ChessPiece({ piece, color }) {
     event.dataTransfer.setData("color", color);
   };
 
-  if (piece.color === "white") {
+  if (piece.color === "white" || piece.color === "green") {
     if (piece.name === "Queen") {
       return (
         <img
@@ -67,7 +67,7 @@ function ChessPiece({ piece, color }) {
       }
   }
 
-  if (piece.color === "black") {
+  if (piece.color === "black" || piece.color === 'green') {
     if (piece.name === "Queen") {
       return (
         <img

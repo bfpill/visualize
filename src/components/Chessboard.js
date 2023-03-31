@@ -17,6 +17,7 @@ function Chessboard() {
   ];
 
   const [rows, setRows] = useState(emptyArr);
+  const [greenSquares, setGreenSquares] = useState(emptyArr);
 
   const [addingPieces, setAddingPieces] = useState(false);
   const prevAddingPiecesRef = useRef(false);
@@ -31,7 +32,7 @@ function Chessboard() {
   // empty dependency array means this effect runs only once on first render
   useEffect(() => {
     // Call buildB function on the first render
-    setBoard(buildB(5, rows));
+    setBoard(buildB(5, rows, tilesHidden, piecesHidden, greenSquares));
   }, []);
 
   useEffect(() => {
@@ -48,8 +49,13 @@ function Chessboard() {
     setAddingPieces(false);
   },[rows, cornerColor, board, piecesHidden, boardHidden, tilesHidden]);
 
-  function handleClick(row, col) {
-    console.log(`Square ${row},${col} clicked!`);
+  function handleClick(row, col){
+    if(rows[row][col] != "none"){
+      const arr = greenSquares;
+      arr[row][col] = "green";
+      setGreenSquares(arr);
+      setBoard(buildB(5, rows, tilesHidden, piecesHidden, arr));
+    }
   }
 
   function handleHideBoard() {
@@ -62,12 +68,12 @@ function Chessboard() {
 
   function handleHidePieces(){
     setPiecesHidden(true);
-    setBoard(buildB(5, rows, tilesHidden, true));
+    setBoard(buildB(5, rows, tilesHidden, true, greenSquares));
   }
 
   function handleShowPieces(){
     setPiecesHidden(false);
-    setBoard(buildB(5, rows, tilesHidden, false));
+    setBoard(buildB(5, rows, tilesHidden, false, greenSquares));
   }
 
   function reverseColumns(rows) {
@@ -81,38 +87,39 @@ function Chessboard() {
   function handleFlipBoard() {
     setRows(reverseColumns(rows));
     setRows(swapRows(rows));
-    setBoard(buildB(5, rows, tilesHidden, piecesHidden));
+    setBoard(buildB(5, rows, tilesHidden, piecesHidden, greenSquares));
     setMoveHistory([...moveHistory, ["Flipped Board"]]);
   }
 
   function handleReverseRows() {
     setCornerColor(cornerColor === "white" ? "black" : "white");
     setRows(swapRows(rows));
-    setBoard(buildB(5, rows, tilesHidden, piecesHidden));
+    setBoard(buildB(5, rows, tilesHidden, piecesHidden, greenSquares));
     setMoveHistory([...moveHistory, ["Reversed Rows"]]);
   }
 
   function handleReverseColumns() {
     setCornerColor(cornerColor === "white" ? "black" : "white");
     setRows(reverseColumns(rows));
-    setBoard(buildB(5, rows, tilesHidden, piecesHidden));
+    setBoard(buildB(5, rows, tilesHidden, piecesHidden, greenSquares));
     setMoveHistory([...moveHistory, ["Reversed Columns"]]);
   }
 
   function handleResetBoard(){
     setRows(emptyArr);
     setMoveHistory([]);
-    setBoard(buildB(5, emptyArr, tilesHidden, piecesHidden));
+    setGreenSquares(emptyArr)
+    setBoard(buildB(5, emptyArr, tilesHidden, piecesHidden, emptyArr));
   }
 
   function handleHideTiles(){
     setTilesHidden(true);
-    setBoard(buildB(5, rows, true, piecesHidden));
+    setBoard(buildB(5, rows, true, piecesHidden, greenSquares));
   }
 
   function handleShowTiles(){
     setTilesHidden(false);
-    setBoard(buildB(5, rows, false, piecesHidden));
+    setBoard(buildB(5, rows, false, piecesHidden, greenSquares));
   }
   function handleAddPiece() {
     //Select a random index from Pieces[]
@@ -124,7 +131,7 @@ function Chessboard() {
     val != false ? setRows(val[0]) : (val = "BOARD FULL");
     let pName = val[2];
     let index = val[1];
-    setBoard(buildB(5, rows, tilesHidden, piecesHidden));
+    setBoard(buildB(5, rows, tilesHidden, piecesHidden, greenSquares));
     if(val != "BOARD FULL"){
       setMoveHistory([...moveHistory, [[pName], index]]);
     }
@@ -168,7 +175,7 @@ function Chessboard() {
     return [arr, [(randCol + 1) , (arr.length - randRow )], piece.name];
   }
 
-  function buildB(size, arr, hideTiles, hidePieces) {
+  function buildB(size, arr, hideTiles, hidePieces, greenSquares) {
     const squares = [];
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
@@ -176,12 +183,23 @@ function Chessboard() {
           cornerColor === "white" ? (i + j) % 2 === 0 ? "white" : "grey"
             : (i + j + 1) % 2 === 0 ? "grey" : "white";
         const piece = arr[i][j];
+        let c = '';
+        if(greenSquares[i][j] === 'green'){
+          c = '#90EE90';
+        }
+        else if(hideTiles){
+          c = 'white';
+        }
+        else{
+          c = squareColor;
+        }
         squares.push(
           <Square
             piece={(hidePieces) ? "none" : piece}
-            color={(hideTiles) ? 'white' : squareColor}
-            row = {[arr[i]]}
-            col = {[arr[j]]}
+            color={c}
+            row = {i}
+            col = {j}
+            onClick= {() => handleClick(i, j)}
           />
         );
       }

@@ -2,10 +2,11 @@ import { useState } from "react";
 import ChessPiece from "./ChessPiece";
 import "./Square.css"
 
-function Square({ piece, color, row, col}) {
-    const [isDark, setIsDark] = useState(false);
+function Square({ piece, color, row, col, onClick}) {
 
     function handleClick(e) {
+
+      onClick();
       if(color === 'white'){
         e.target.classList.add('white-secret-square-clicked');
         setTimeout(() => {
@@ -32,10 +33,17 @@ function Square({ piece, color, row, col}) {
           e.target.classList.remove('black-square-clicked');
         }, 200);
       }
+
+      if(color === 'green'){
+        e.target.classList.add('green-square-clicked');
+        setTimeout(() => {
+          e.target.classList.remove('gren-square-clicked');
+        }, 300);
+      }
     }
   
     const squareStyle = {
-      backgroundColor: isDark ? '#777' : color,
+      backgroundColor: color
     };
 
     return (
@@ -46,7 +54,7 @@ function Square({ piece, color, row, col}) {
       data-col={col} 
       >
 
-        <ChessPiece piece={piece} color={color} />
+        <ChessPiece piece={piece}/>
       </div>
     )
 }
