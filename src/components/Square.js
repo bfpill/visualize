@@ -2,11 +2,10 @@ import { useState } from "react";
 import ChessPiece from "./ChessPiece";
 import "./Square.css"
 
-function Square({ piece, color, row, col, onClick}) {
+function Square({type, piece, color, row, col, onClickFunction}) {
 
     function handleClick(e) {
-
-      onClick();
+      onClickFunction();
       if(color === 'white'){
         e.target.classList.add('white-secret-square-clicked');
         setTimeout(() => {
@@ -20,31 +19,26 @@ function Square({ piece, color, row, col, onClick}) {
           e.target.classList.remove('black-secret-square-clicked');
         }, 200);
       }
-      
-      if(color === 'white'){
-        e.target.classList.add('light-square-clicked');
-        setTimeout(() => {
-          e.target.classList.remove('light-square-clicked');
-        }, 200);
-      }
-      if(color === 'grey'){
-        e.target.classList.add('black-square-clicked');
-        setTimeout(() => {
-          e.target.classList.remove('black-square-clicked');
-        }, 200);
-      }
 
       if(color === 'green'){
         e.target.classList.add('green-square-clicked');
         setTimeout(() => {
-          e.target.classList.remove('gren-square-clicked');
+          e.target.classList.remove('green-square-clicked');
         }, 300);
       }
     }
-  
-    const squareStyle = {
-      backgroundColor: color
-    };
+    let squareStyle;
+
+    if(type === 'greenSquare'){
+      squareStyle = {
+        backgroundColor: 'green'
+      };
+    }
+    else{
+      squareStyle = {
+        backgroundColor: color
+      };
+    }
 
     return (
       <div className="square" 
@@ -54,7 +48,7 @@ function Square({ piece, color, row, col, onClick}) {
       data-col={col} 
       >
 
-        <ChessPiece piece={piece}/>
+        <ChessPiece name={piece.name} color={piece.color}/>
       </div>
     )
 }
