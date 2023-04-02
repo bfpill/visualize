@@ -4,6 +4,7 @@ import "./Chessboard.css";
 import addPieceSound from '../sounds/move-self.mp3'
 import click from '../sounds/click.wav'
 import MoveHistory from "./MoveHistory";
+import { render } from "@testing-library/react";
 
 function Chessboard() {
   const [moveHistory, setMoveHistory] = useState([]);
@@ -27,14 +28,15 @@ function Chessboard() {
   const [boardHidden, setBoardHidden] = useState(false);
   const [tilesHidden, setTilesHidden] = useState(false);
   
-
   const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen"];
+
+  const initialBoard = setInitalBoard(squares.length); //array of default square objects formatted with color
 
   // empty dependency array means this effect runs only once on first render
   useEffect(() => {
-    // Call buildB function on the first render
+    // Call buildBoardComponents function on the first render
     setSquares(setInitalBoard(5));
-    setBoard(buildB());
+    setBoard(buildBoardComponents(squares));
   }, []);
 
   useEffect(() => {
@@ -51,22 +53,45 @@ function Chessboard() {
     setAddingPieces(false);
   },[rows, cornerColor, board, piecesHidden, boardHidden, tilesHidden, setGreenSquares]);
 
-  function handleSquareClick(row, col){
-    if(squareContainsPiece(row, col)){
+  function setInitalBoard(size){
+    const initialSquares = emptyArr;
+
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        let squareColor;
+        squareColor = 
+        (cornerColor === "white" ? (i + j) % 2 === 0 ? "white" : "grey"
+          : (i + j + 1) % 2 === 0 ? "grey" : "white");
       
+        const sq = {
+          piece: {
+            name: 'none',
+            color: 'none',
+          },
+          color: squareColor,
+          row : i,
+          col : j,
+        }
+        initialSquares[i][j] = sq;
+      }
     }
+    return initialSquares;
   }
 
-  function updateHistory(history, newHistory){
-    setMoveHistory([...history, newHistory])
+  function handleResetBoard(){
+    setSquares(initialBoard);
+    setMoveHistory([]);
+    setBoard(buildBoardComponents(initialBoard, tilesHidden, piecesHidden));
   }
 
-  function squareContainsPiece(row, col){
-    const val = squares[row][col];
-    if(val.piece !== 'none'){
-      return true;
-    }
-    else return false;
+  function handleHideTiles(){
+    setTilesHidden(true);
+    setBoard(buildBoardComponents(squares, true, piecesHidden))
+  }
+
+  function handleShowTiles(){
+    setTilesHidden(false);
+    setBoard(buildBoardComponents(squares, false, piecesHidden))
   }
 
   function handleHideBoard() {
@@ -79,62 +104,12 @@ function Chessboard() {
 
   function handleHidePieces(){
     setPiecesHidden(true);
-    setBoard(buildB(5, squares));
+    setBoard(buildBoardComponents(squares, tilesHidden, true))
   }
 
   function handleShowPieces(){
     setPiecesHidden(false);
-    setBoard(buildB(5, squares));
-  }
-
-  function reverseColumns(rows) {
-    return rows.map((row) => row.reverse());
-  }
-
-  function reverseRows(rows) {
-    return rows.reverse();
-  }
-
-  function handleFlipBoard() {
-    setRows(reverseColumns(rows));
-    setRows(reverseRows(rows));
-    setGreenSquares(reverseColumns(greenSquares));
-    setGreenSquares(reverseRows(greenSquares))
-    setBoard(buildB(5, squares));
-    updateHistory([...moveHistory, ["Flipped Board"]]);
-  }
-
-  function handleReverseRows() {
-    setCornerColor(cornerColor === "white" ? "black" : "white");
-    setRows(reverseColumns(rows));
-    setGreenSquares(reverseColumns(greenSquares))
-    setBoard(buildB(5, squares));
-    setMoveHistory([...moveHistory, ["Reversed Rows"]]);
-  }
-
-  function handleReverseColumns() {
-    setCornerColor(cornerColor === "white" ? "black" : "white");
-    setRows(reverseRows(rows));
-    setGreenSquares(reverseRows(greenSquares))
-    setBoard(buildB(5, squares));
-    setMoveHistory([...moveHistory, ["Reversed Columns"]]);
-  }
-
-  function handleResetBoard(){
-    setRows(emptyArr);
-    setGreenSquares(emptyArr)
-    setMoveHistory([]);
-    //setBoard(buildB(5, emptyArr, tilesHidden, piecesHidden, emptyArr));
-  }
-
-  function handleHideTiles(){
-    setTilesHidden(true);
-    setBoard(buildB(5, squares));
-  }
-
-  function handleShowTiles(){
-    setTilesHidden(false);
-    setBoard(buildB());
+    setBoard(buildBoardComponents(squares, tilesHidden, false))
   }
 
   function findEmptyIndexs(size){
@@ -169,10 +144,8 @@ function Chessboard() {
       name: pieceName,
       color: pieceColor
     }
-
-    let val = addPiece(piece);
-
-    setBoard(buildB());
+    addPiece(piece);
+    setBoard(buildBoardComponents(squares, tilesHidden, piecesHidden));
   }
 
   function addPiece(piece) {
@@ -200,30 +173,55 @@ function Chessboard() {
     }
     return false;
   }
-
-  function setInitalBoard(size){
-    const initialSquares = emptyArr;
-
-    for (let i = 0; i < size; i++) {
-      for (let j = 0; j < size; j++) {
-        let squareColor;
-        squareColor = 
-        (cornerColor === "white" ? (i + j) % 2 === 0 ? "white" : "grey"
-          : (i + j + 1) % 2 === 0 ? "grey" : "white");
-      
-        const sq = {
-          piece: {
-            name: 'none',
-            color: 'none',
-          },
-          color: squareColor,
-          row : i,
-          col : j,
-        }
-        initialSquares[i][j] = sq;
-      }
+  
+  function handleSquareClick(row, col){
+    if(squareContainsPiece(row, col)){
+      const sq = squares[row][col];
+      sq.color = 'green';
+      setSquares(updateSquares(row, col, sq));
+      setBoard(buildBoardComponents(squares, tilesHidden, piecesHidden))
+      return true;
     }
-    return initialSquares;
+    return false;
+  }
+
+  function squareContainsPiece(row, col){
+    const val = squares[row][col];
+    if(val.piece.name !== 'none'){
+      return true;
+    }
+    else return false;
+  }
+
+  function reverseRows(arr) {
+    return arr.map(row => reverseColumns(row));
+  }
+
+  function reverseColumns(arr) {
+    return arr.map(row => reverseColumns(row));
+  }
+
+  function handleFlipBoard() {
+    setRows(reverseColumns(rows));
+    setRows(reverseRows(rows));
+    setGreenSquares(reverseColumns(greenSquares));
+    setGreenSquares(reverseRows(greenSquares))
+    setBoard(buildBoardComponents(squares, tilesHidden, piecesHidden));
+    setMoveHistory([...moveHistory, ["Flipped Board"]]);
+  }
+
+  function handleReverseRows() {
+    const reversedRows = reverseRows(squares);
+    setSquares(reversedRows);
+    setBoard(buildBoardComponents(reversedRows, tilesHidden, piecesHidden));
+    setMoveHistory([...moveHistory, ["Reversed Rows"]]);
+  }
+
+  function handleReverseColumns() {
+    const reversedColumns = reverseColumns(squares);
+    setSquares(reversedColumns);
+    setBoard(buildBoardComponents(reversedColumns, tilesHidden, piecesHidden));
+    setMoveHistory([...moveHistory, ["Reversed Columns"]]);
   }
 
   function copyArrayOfObjects(originalArray) {
@@ -237,16 +235,17 @@ function Chessboard() {
     return squaresCopy;
   }
 
-  function buildB() {
+  function buildBoardComponents(arr, hideTiles, hidePieces) {
     const retArr = [];
-    for (let i = 0; i < squares.length; i++) {
-      for (let j = 0; j < squares.length; j++) {
-        const sq = squares[i][j];
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr.length; j++) {
+        const sq = arr[i][j];
+
         retArr.push(
             <Square
               type = ""
-              piece = {sq.piece}
-              color = {sq.color}
+              piece = {hidePieces ? {name: "none", color: "none"} : sq.piece}
+              color = {hideTiles ? "white" : sq.color}
               row = {sq.row}
               col = {sq.col}
               onClickFunction = {() => handleSquareClick(i, j)}
@@ -256,39 +255,6 @@ function Chessboard() {
     }
     return retArr;
   }
-
-  /*function buildB(size, arr, hideTiles, hidePieces, greenArray) {
-    const squares = [];
-    for (let i = 0; i < size; i++) {
-      for (let j = 0; j < size; j++) {
-        let squareColor;
-        const piece = arr[i][j];
-        squareColor = 
-        (cornerColor === "white" ? (i + j) % 2 === 0 ? "white" : "grey"
-          : (i + j + 1) % 2 === 0 ? "grey" : "white");
-
-        const val = greenArray[i][j];
-        if(val === 'blue'){
-          squareColor = 'blue';
-        }
-
-        if(hideTiles){
-          squareColor = 'white';
-        }
-        
-        squares.push(
-          <Square
-            piece={(hidePieces) ? "none" : piece}
-            color={squareColor}
-            row = {i}
-            col = {j}
-            onClickFunction = {() => handleSquareClick(i, j)}
-          />
-        );
-      }
-    }
-    return squares;
-  }*/
 
   return (
     <>

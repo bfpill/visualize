@@ -11,47 +11,47 @@
     background-color: gray;
   }
   
-  .light-square-clicked {
-    animation: light-pulse 0.5s;
+  .white-square-wrong {
+    animation: white-red-pulse 0.2s;
   }
   
-  .black-square-clicked {
-    animation: black-pulse 0.5s;
+  .black-square-wrong {
+    animation: black-red-pulse 0.2s;
   }
-  
-  .black-secret-square-clicked {
-    animation: black-red-pulse 0.5s;
+
+  .white-to-green {
+    animation: white-green-pulse 0.2s;
   }
-  
-  .white-secret-square-clicked {
-    animation: white-red-pulse 0.5s;
+
+  .black-to-green {
+    animation: black-green-pulse 0.2s;
   }
 
   .green-square-clicked {
     animation: white-green-pulse 0.5s;
   }
   
-  @keyframes white-green {
+  @keyframes white-green-pulse {
     0% {
-      background-color: grey;
+      background-color: rgb(255, 254, 254);
     }
     50% {
-      background-color:  rgb(99, 99, 99);
+      background-color:  rgb(89, 130, 66);
     }
     100% {
-      background-color: rgb(0, 255, 110);
+      background-color: green;
     }
   }
-  
-  @keyframes black-pulse {
+
+  @keyframes black-green-pulse {
     0% {
       background-color: grey;
     }
     50% {
-      background-color:  rgb(99, 99, 99);
+      background-color:  rgb(94, 140, 69);
     }
     100% {
-      background-color: grey;
+      background-color: green;
     }
   }
   
@@ -77,17 +77,5 @@
     }
     100% {
       background-color: rgb(255, 255, 255);
-    }
-  }
-  
-  @keyframes light-pulse {
-    0% {
-      background-color: #fff;
-    }
-    50% {
-      background-color: #d9d9d9;
-    }
-    100% {
-      background-color: #fff;
     }
   }

@@ -3,43 +3,47 @@ import ChessPiece from "./ChessPiece";
 import "./Square.css"
 
 function Square({type, piece, color, row, col, onClickFunction}) {
-
-    function handleClick(e) {
-      onClickFunction();
-      if(color === 'white'){
-        e.target.classList.add('white-secret-square-clicked');
-        setTimeout(() => {
-          e.target.classList.remove('white-secret-square-clicked');
-        }, 300);
-      }
-      
-      if(color === 'grey'){
-        e.target.classList.add('black-secret-square-clicked');
-        setTimeout(() => {
-          e.target.classList.remove('black-secret-square-clicked');
-        }, 200);
-      }
-
-      if(color === 'green'){
-        e.target.classList.add('green-square-clicked');
-        setTimeout(() => {
-          e.target.classList.remove('green-square-clicked');
-        }, 300);
-      }
-    }
     let squareStyle;
-
-    if(type === 'greenSquare'){
-      squareStyle = {
-        backgroundColor: 'green'
-      };
+    function handleClick(e) {
+      const wasCorrect = onClickFunction();
+      if(wasCorrect){
+          squareStyle = {
+            backgroundColor: 'green',
+          };
+          if(color === 'white'){
+            e.target.classList.add('white-to-green');
+            setTimeout(() => {
+              e.target.classList.remove('white-to-green');
+            }, 200);
+          }
+          else if(color === 'grey'){
+            e.target.classList.add('black-to-green');
+            setTimeout(() => {
+              e.target.classList.remove('black-to-green');
+            }, 200);
+          }
+      }
+      else{
+        squareStyle = {
+          backgroundColor: color
+        };
+        if(color === 'white'){
+          e.target.classList.add('white-square-wrong');
+          setTimeout(() => {
+            e.target.classList.remove('white-square-wrong');
+          }, 200);
+        }
+        else if(color === 'grey'){
+          e.target.classList.add('black-square-wrong');
+          setTimeout(() => {
+            e.target.classList.remove('black-square-wrong');
+          }, 200);
+        }
+      }
     }
-    else{
-      squareStyle = {
-        backgroundColor: color
-      };
-    }
-
+    squareStyle = {
+      backgroundColor: color
+    };
     return (
       <div className="square" 
       style={squareStyle} 
