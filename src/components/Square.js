@@ -3,13 +3,13 @@ import ChessPiece from "./ChessPiece";
 import "./Square.css"
 
 function Square({type, piece, color, row, col, onClickFunction}) {
-    let squareStyle;
+  let squareStyle;
     function handleClick(e) {
       const wasCorrect = onClickFunction();
       if(wasCorrect){
-          squareStyle = {
-            backgroundColor: 'green',
-          };
+        squareStyle = {
+          backgroundColor: "green"
+        };
           if(color === 'white'){
             e.target.classList.add('white-to-green');
             setTimeout(() => {
@@ -24,9 +24,6 @@ function Square({type, piece, color, row, col, onClickFunction}) {
           }
       }
       else{
-        squareStyle = {
-          backgroundColor: color
-        };
         if(color === 'white'){
           e.target.classList.add('white-square-wrong');
           setTimeout(() => {
@@ -41,9 +38,11 @@ function Square({type, piece, color, row, col, onClickFunction}) {
         }
       }
     }
+    
     squareStyle = {
       backgroundColor: color
     };
+
     return (
       <div className="square" 
       style={squareStyle} 

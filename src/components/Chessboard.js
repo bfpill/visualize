@@ -133,6 +133,37 @@ function Chessboard() {
     }
   }
 
+  function reverseRows(arr) {
+    return arr.map(row => reverseColumns(row));
+  }
+
+  function reverseColumns(arr) {
+    return arr.reverse();
+  }
+
+  function handleFlipBoard() {
+    setRows(reverseColumns(rows));
+    setRows(reverseRows(rows));
+    setGreenSquares(reverseColumns(greenSquares));
+    setGreenSquares(reverseRows(greenSquares))
+    setBoard(buildBoardComponents(squares, tilesHidden, piecesHidden));
+    setMoveHistory([...moveHistory, ["Flipped Board"]]);
+  }
+
+  function handleReverseRows() {
+    const reversedRows = reverseRows(squares);
+    setSquares(reversedRows);
+    setBoard(buildBoardComponents(reversedRows, tilesHidden, piecesHidden));
+    setMoveHistory([...moveHistory, ["Reversed Rows"]]);
+  }
+
+  function handleReverseColumns() {
+    const reversedColumns = reverseColumns(squares);
+    setSquares(reversedColumns);
+    setBoard(buildBoardComponents(reversedColumns, tilesHidden, piecesHidden));
+    setMoveHistory([...moveHistory, ["Reversed Columns"]]);
+  }
+
   function handleAddPiece() {
     //Select a random index from Pieces[]
     setAddingPieces(true);
@@ -178,8 +209,10 @@ function Chessboard() {
     if(squareContainsPiece(row, col)){
       const sq = squares[row][col];
       sq.color = 'green';
-      setSquares(updateSquares(row, col, sq));
-      setBoard(buildBoardComponents(squares, tilesHidden, piecesHidden))
+      const updatedSquares = updateSquares(row, col, sq);
+      setSquares(updatedSquares);
+      //essential to pass updatedSquares as this avoid asynchronous state tomfoolery
+      setBoard(buildBoardComponents(updatedSquares, tilesHidden, piecesHidden)); 
       return true;
     }
     return false;
@@ -193,44 +226,14 @@ function Chessboard() {
     else return false;
   }
 
-  function reverseRows(arr) {
-    return arr.map(row => reverseColumns(row));
+  function copyArrayOfObjects(arr) {
+    const newArr = arr.map(row => row.map(obj => ({...obj}))); // create a new copy of the 2D array and its objects
+    return newArr;
   }
 
-  function reverseColumns(arr) {
-    return arr.map(row => reverseColumns(row));
-  }
-
-  function handleFlipBoard() {
-    setRows(reverseColumns(rows));
-    setRows(reverseRows(rows));
-    setGreenSquares(reverseColumns(greenSquares));
-    setGreenSquares(reverseRows(greenSquares))
-    setBoard(buildBoardComponents(squares, tilesHidden, piecesHidden));
-    setMoveHistory([...moveHistory, ["Flipped Board"]]);
-  }
-
-  function handleReverseRows() {
-    const reversedRows = reverseRows(squares);
-    setSquares(reversedRows);
-    setBoard(buildBoardComponents(reversedRows, tilesHidden, piecesHidden));
-    setMoveHistory([...moveHistory, ["Reversed Rows"]]);
-  }
-
-  function handleReverseColumns() {
-    const reversedColumns = reverseColumns(squares);
-    setSquares(reversedColumns);
-    setBoard(buildBoardComponents(reversedColumns, tilesHidden, piecesHidden));
-    setMoveHistory([...moveHistory, ["Reversed Columns"]]);
-  }
-
-  function copyArrayOfObjects(originalArray) {
-    return originalArray.map(obj => ({ ...obj }));
-  }
-
-  function updateSquares(row, col, square){
-    const squaresCopy = copyArrayOfObjects(squares);
-    squaresCopy[row][col] = square;
+  function updateSquares(row, col, sq){
+    const squaresCopy = copyArrayOfObjects(squares); //state variable
+    squaresCopy[row][col] = sq;
 
     return squaresCopy;
   }
@@ -239,7 +242,13 @@ function Chessboard() {
     const retArr = [];
     for (let i = 0; i < arr.length; i++) {
       for (let j = 0; j < arr.length; j++) {
-        const sq = arr[i][j];
+        let sq;
+        try{
+          sq = arr[i][j];
+        }
+        catch {
+          console.error("Couldnt set sq to arr index");
+        }
 
         retArr.push(
             <Square
