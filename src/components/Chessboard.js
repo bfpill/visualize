@@ -80,18 +80,12 @@ function Chessboard() {
     return initialSquares;
   }
 
-  function handleResetBoard(){
-    setSquares(initialBoard);
-    setMoveHistory([]);
-    setBoard(buildBoardComponents(initialBoard, piecesHidden));
-  }
-
   function updateProperty(arr, propName, propValue) {
     return arr.map(row =>
       row.map(obj => ({ ...obj, [propName]: propValue }))
     );
   }
-  
+
   function updatePiecesHidden(arr, isHidden){
     return arr.map(row =>
       row.map(sq => {
@@ -106,8 +100,13 @@ function Chessboard() {
       }
     ))
   }
-  
 
+  function handleResetBoard(){
+    setSquares(initialBoard);
+    setMoveHistory([]);
+    setBoard(buildBoardComponents(initialBoard));
+  }
+  
   function handleHideTiles(){
     setTilesHidden(true);
     const updatedSquares = updateProperty(squares, 'isHidden', true);
@@ -134,7 +133,7 @@ function Chessboard() {
     setPiecesHidden(true);
     const updatedSquares = updatePiecesHidden(squares, true);
     setSquares(updatedSquares);
-    setBoard(buildBoardComponents(updatedSquares))
+    setBoard(buildBoardComponents(updatedSquares));
   }
 
   function handleShowPieces(){
@@ -204,6 +203,7 @@ function Chessboard() {
     const pieceColor = Math.floor(Math.random() * 2) === 0 ? "black" : "white";
 
     const piece = {
+      isHidden: piecesHidden,
       name: pieceName,
       color: pieceColor
     }
