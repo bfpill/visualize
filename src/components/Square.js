@@ -2,7 +2,7 @@ import { useState } from "react";
 import ChessPiece from "./ChessPiece";
 import "./Square.css"
 
-function Square({type, piece, color, row, col, onClickFunction}) {
+function Square({isHidden, piece, color, row, col, onClickFunction}) {
   let squareStyle;
     function handleClick(e) {
       const wasCorrect = onClickFunction();
@@ -38,10 +38,17 @@ function Square({type, piece, color, row, col, onClickFunction}) {
         }
       }
     }
+    if(isHidden){
+      squareStyle = {
+        backgroundColor: 'white'
+      };
+    }
+    else{
+      squareStyle = {
+        backgroundColor: color
+      };
+    }
     
-    squareStyle = {
-      backgroundColor: color
-    };
 
     return (
       <div className="square" 
@@ -51,7 +58,7 @@ function Square({type, piece, color, row, col, onClickFunction}) {
       data-col={col} 
       >
 
-        <ChessPiece name={piece.name} color={piece.color}/>
+        <ChessPiece piece={piece}/>
       </div>
     )
 }

@@ -51,7 +51,7 @@ function Chessboard() {
       new Audio(click).play();
     }
     setAddingPieces(false);
-  },[rows, cornerColor, board, piecesHidden, boardHidden, tilesHidden, setGreenSquares]);
+  },[rows, cornerColor, board, piecesHidden, tilesHidden, boardHidden, setGreenSquares]);
 
   function setInitalBoard(size){
     const initialSquares = emptyArr;
@@ -65,9 +65,11 @@ function Chessboard() {
       
         const sq = {
           piece: {
+            isHidden: false,
             name: 'none',
             color: 'none',
           },
+          isHidden: false,
           color: squareColor,
           row : i,
           col : j,
@@ -81,17 +83,43 @@ function Chessboard() {
   function handleResetBoard(){
     setSquares(initialBoard);
     setMoveHistory([]);
-    setBoard(buildBoardComponents(initialBoard, tilesHidden, piecesHidden));
+    setBoard(buildBoardComponents(initialBoard, piecesHidden));
   }
+
+  function updateProperty(arr, propName, propValue) {
+    return arr.map(row =>
+      row.map(obj => ({ ...obj, [propName]: propValue }))
+    );
+  }
+  
+  function updatePiecesHidden(arr, isHidden){
+    return arr.map(row =>
+      row.map(sq => {
+        const sqCopy = sq;
+        if(isHidden){
+          sqCopy.piece.isHidden = true;
+        }
+        else{
+          sqCopy.piece.isHidden = false;
+        }
+        return sqCopy;
+      }
+    ))
+  }
+  
 
   function handleHideTiles(){
     setTilesHidden(true);
-    setBoard(buildBoardComponents(squares, true, piecesHidden))
+    const updatedSquares = updateProperty(squares, 'isHidden', true);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares, piecesHidden))
   }
 
   function handleShowTiles(){
     setTilesHidden(false);
-    setBoard(buildBoardComponents(squares, false, piecesHidden))
+    const updatedSquares = updateProperty(squares, 'isHidden', false);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares, piecesHidden))
   }
 
   function handleHideBoard() {
@@ -104,12 +132,16 @@ function Chessboard() {
 
   function handleHidePieces(){
     setPiecesHidden(true);
-    setBoard(buildBoardComponents(squares, tilesHidden, true))
+    const updatedSquares = updatePiecesHidden(squares, true);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares))
   }
 
   function handleShowPieces(){
     setPiecesHidden(false);
-    setBoard(buildBoardComponents(squares, tilesHidden, false))
+    const updatedSquares = updatePiecesHidden(squares, false);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares))
   }
 
   function findEmptyIndexs(size){
@@ -146,21 +178,21 @@ function Chessboard() {
     setRows(reverseRows(rows));
     setGreenSquares(reverseColumns(greenSquares));
     setGreenSquares(reverseRows(greenSquares))
-    setBoard(buildBoardComponents(squares, tilesHidden, piecesHidden));
+    setBoard(buildBoardComponents(squares));
     setMoveHistory([...moveHistory, ["Flipped Board"]]);
   }
 
   function handleReverseRows() {
     const reversedRows = reverseRows(squares);
     setSquares(reversedRows);
-    setBoard(buildBoardComponents(reversedRows, tilesHidden, piecesHidden));
+    setBoard(buildBoardComponents(reversedRows));
     setMoveHistory([...moveHistory, ["Reversed Rows"]]);
   }
 
   function handleReverseColumns() {
     const reversedColumns = reverseColumns(squares);
     setSquares(reversedColumns);
-    setBoard(buildBoardComponents(reversedColumns, tilesHidden, piecesHidden));
+    setBoard(buildBoardComponents(reversedColumns));
     setMoveHistory([...moveHistory, ["Reversed Columns"]]);
   }
 
@@ -176,7 +208,7 @@ function Chessboard() {
       color: pieceColor
     }
     addPiece(piece);
-    setBoard(buildBoardComponents(squares, tilesHidden, piecesHidden));
+    setBoard(buildBoardComponents(squares));
   }
 
   function addPiece(piece) {
@@ -212,8 +244,8 @@ function Chessboard() {
       const updatedSquares = updateSquares(row, col, sq);
       setSquares(updatedSquares);
       //essential to pass updatedSquares as this avoid asynchronous state tomfoolery
-      setBoard(buildBoardComponents(updatedSquares, tilesHidden, piecesHidden)); 
-      return true;
+      setBoard(buildBoardComponents(updatedSquares)); 
+      return true; //Square.js uses this return internally to render animations
     }
     return false;
   }
@@ -238,23 +270,16 @@ function Chessboard() {
     return squaresCopy;
   }
 
-  function buildBoardComponents(arr, hideTiles, hidePieces) {
+  function buildBoardComponents(arr) {
     const retArr = [];
     for (let i = 0; i < arr.length; i++) {
       for (let j = 0; j < arr.length; j++) {
-        let sq;
-        try{
-          sq = arr[i][j];
-        }
-        catch {
-          console.error("Couldnt set sq to arr index");
-        }
-
+        const sq = arr[i][j];
         retArr.push(
             <Square
-              type = ""
-              piece = {hidePieces ? {name: "none", color: "none"} : sq.piece}
-              color = {hideTiles ? "white" : sq.color}
+              isHidden={sq.isHidden}
+              piece = {sq.piece}
+              color = {sq.color}
               row = {sq.row}
               col = {sq.col}
               onClickFunction = {() => handleSquareClick(i, j)}
