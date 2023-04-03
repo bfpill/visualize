@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import Square from "./Square";
-import "./Chessboard.css";
 import addPieceSound from '../sounds/move-self.mp3'
 import click from '../sounds/click.wav'
 import MoveHistory from "./MoveHistory";
-import { render } from "@testing-library/react";
+import getRandomPastelArray from "../functions/getRandomPastel";
 
+import "./Chessboard.css";
 function Chessboard() {
   const [moveHistory, setMoveHistory] = useState([]);
 
@@ -27,9 +27,12 @@ function Chessboard() {
   const [piecesHidden, setPiecesHidden] = useState(false);
   const [boardHidden, setBoardHidden] = useState(false);
   const [tilesHidden, setTilesHidden] = useState(false);
+  const [numColors, setNumColors] = useState(2);
   
   const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen"];
+  let colorArr = getRandomPastelArray(numColors);
 
+  //run this after all state / vars has been declared
   const initialBoard = setInitalBoard(squares.length); //array of default square objects formatted with color
 
   // empty dependency array means this effect runs only once on first render
@@ -53,6 +56,20 @@ function Chessboard() {
     setAddingPieces(false);
   },[rows, cornerColor, board, piecesHidden, tilesHidden, boardHidden, setGreenSquares]);
 
+
+  function getRandomPastel(usedIndices, numColors){
+    var usedIndices = []; // Array to keep track of used indices
+    var numColors = colorArr.length;
+    var index = Math.floor(Math.random() * numColors);
+    
+    while (usedIndices.indexOf(index) !== -1) { // Keep generating random indices until we get one that hasn't been used yet
+      index = Math.floor(Math.random() * numColors);
+    }
+    
+    usedIndices.push(index); // Add the index to the usedIndices array
+    return colorArr[index];
+  }
+
   function setInitalBoard(size){
     const initialSquares = emptyArr;
 
@@ -70,7 +87,7 @@ function Chessboard() {
             color: 'none',
           },
           isHidden: false,
-          color: squareColor,
+          color: getRandomPastel(numColors),
           row : i,
           col : j,
         }
@@ -101,6 +118,28 @@ function Chessboard() {
     ))
   }
 
+  function handleAddColor(){
+    let numColorsCopy = numColors;
+    numColorsCopy ++;
+    setNumColors(numColorsCopy);
+
+    setSquares(initialBoard);
+    setBoard(buildBoardComponents(initialBoard, piecesHidden));
+    setMoveHistory([...moveHistory], numColorsCopy);
+  }
+
+  function handleSubtractColor(){
+    if(numColors > 2){
+      let numColorsCopy = numColors;
+      numColorsCopy --;
+      setNumColors(numColorsCopy);
+
+      setSquares(initialBoard);
+      setBoard(buildBoardComponents(initialBoard, piecesHidden));
+      setMoveHistory([...moveHistory], numColorsCopy);
+    }
+  }
+
   function handleResetBoard(){
     setSquares(initialBoard);
     setMoveHistory([]);
@@ -111,14 +150,14 @@ function Chessboard() {
     setTilesHidden(true);
     const updatedSquares = updateProperty(squares, 'isHidden', true);
     setSquares(updatedSquares);
-    setBoard(buildBoardComponents(updatedSquares, piecesHidden))
+    setBoard(buildBoardComponents(updatedSquares, piecesHidden));
   }
 
   function handleShowTiles(){
     setTilesHidden(false);
     const updatedSquares = updateProperty(squares, 'isHidden', false);
     setSquares(updatedSquares);
-    setBoard(buildBoardComponents(updatedSquares, piecesHidden))
+    setBoard(buildBoardComponents(updatedSquares, piecesHidden));
   }
 
   function handleHideBoard() {
@@ -307,10 +346,16 @@ function Chessboard() {
           )}
         </div>
 
-        <MoveHistory moveHistory={moveHistory} />
+        <MoveHistory moveHistory={moveHistory} numColors={numColors}/>
       </div>
 
       <div className="bottom-container">
+      <button onClick={handleAddColor} className="button">
+          + Color
+        </button>
+        <button onClick={handleSubtractColor} className="button">
+          - Color
+        </button>
         <button onClick={handleReverseRows} className="button">
           Reverse Rows
         </button>

@@ -1,8 +1,8 @@
 .chessboard {
   display: flex;
   flex-wrap: wrap;
-  width: 515px;
-  height: 515px;
+  width: 525px;
+  height: 525px;
   border: 2px solid black;
   margin-top: 20px;
 }

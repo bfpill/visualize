@@ -1,7 +1,7 @@
 import './MoveHistory.css';
 import React, { useRef, useEffect } from "react";
 
-function MoveHistory({ moveHistory }) {
+function MoveHistory({ moveHistory, numColors }) {
   const historyBoxRef = useRef(null);
 
   useEffect(() => {
@@ -13,6 +13,9 @@ function MoveHistory({ moveHistory }) {
     <div className='overall-container'>
      <h2>History</h2>
     <div className ="history-container" ref={historyBoxRef}>
+      <div>
+        <p className="invalidMove">Colors: {numColors}</p>
+      </div>
         <div>
         {moveHistory[0]
           ? moveHistory.map((move) => {

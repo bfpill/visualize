@@ -1,10 +1,12 @@
 .square {
     width: 103px;
     height: 103px;
+    border: 1px solid azure;
   }
   
   .white {
     background-color: white;
+
   }
   
   .black {
