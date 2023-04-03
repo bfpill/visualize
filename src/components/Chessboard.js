@@ -173,10 +173,14 @@ function Chessboard() {
   }
 
   function handleFlipBoard() {
-    const reversedSquares = reverseRows(squares); //give em a one over vertical reverse 
-    const updatedSquares = reverseColumns(reversedSquares); //finish it off with horiztontal bludgeon 
+    // I have no idea why setSquares has to be called twice.. but ... it doesnt seem to cause any harm.. 
+    let updatedSquares = reverseColumns(squares); 
     
     setSquares(updatedSquares);
+    updatedSquares = reverseRows(updatedSquares); //finish it off with horiztontal bludgeon 
+
+    setSquares(updatedSquares);
+  
     setBoard(buildBoardComponents(updatedSquares));
     setMoveHistory([...moveHistory, ["Flipped Board"]]);
   }
@@ -191,7 +195,7 @@ function Chessboard() {
 
   function handleReverseColumns() {
     const updatedSquares = reverseColumns(squares);
-    
+
     setSquares(updatedSquares);
     setBoard(buildBoardComponents(updatedSquares));
     setMoveHistory([...moveHistory, ["Reversed Columns"]]);
