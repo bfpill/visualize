@@ -1,7 +1,7 @@
 import ChessPiece from "./ChessPiece";
 import "./Square.css"
 
-function Square({isHidden, piece, color, row, col, onClickFunction}) {
+function Square({type, isHidden, piece, color, row, col, onClickFunction}) {
   let squareStyle;
     function handleClick(e) {
       const wasCorrect = onClickFunction();
@@ -48,7 +48,6 @@ function Square({isHidden, piece, color, row, col, onClickFunction}) {
       };
     }
     
-
     return (
       <div className="square" 
       style={squareStyle} 
@@ -58,6 +57,7 @@ function Square({isHidden, piece, color, row, col, onClickFunction}) {
       >
 
         <ChessPiece piece={piece}/>
+
       </div>
     )
 }

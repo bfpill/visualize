@@ -86,6 +86,7 @@ function Chessboard() {
             name: 'none',
             color: 'none',
           },
+          type: 'unclicked',
           isHidden: false,
           color: getRandomPastel(numColors),
           row : i,
@@ -285,7 +286,7 @@ function Chessboard() {
   function handleSquareClick(row, col){
     if(squareContainsPiece(row, col)){
       const sq = squares[row][col];
-      sq.color = '#77DD77';
+      sq.type = 'correct';
       const updatedSquares = updateSquares(row, col, sq);
       setSquares(updatedSquares);
       //essential to pass updatedSquares as this avoid asynchronous state tomfoolery
@@ -322,6 +323,7 @@ function Chessboard() {
         const sq = arr[i][j];
         retArr.push(
             <Square
+              type = {sq.type}
               isHidden={sq.isHidden}
               piece = {sq.piece}
               color = {sq.color}
