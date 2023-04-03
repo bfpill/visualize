@@ -173,25 +173,27 @@ function Chessboard() {
   }
 
   function handleFlipBoard() {
-    setRows(reverseColumns(rows));
-    setRows(reverseRows(rows));
-    setGreenSquares(reverseColumns(greenSquares));
-    setGreenSquares(reverseRows(greenSquares))
-    setBoard(buildBoardComponents(squares));
+    const reversedSquares = reverseRows(squares); //give em a one over vertical reverse 
+    const updatedSquares = reverseColumns(reversedSquares); //finish it off with horiztontal bludgeon 
+    
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares));
     setMoveHistory([...moveHistory, ["Flipped Board"]]);
   }
 
   function handleReverseRows() {
-    const reversedRows = reverseRows(squares);
-    setSquares(reversedRows);
-    setBoard(buildBoardComponents(reversedRows));
+    const updatedSquares = reverseRows(squares);
+
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares));
     setMoveHistory([...moveHistory, ["Reversed Rows"]]);
   }
 
   function handleReverseColumns() {
-    const reversedColumns = reverseColumns(squares);
-    setSquares(reversedColumns);
-    setBoard(buildBoardComponents(reversedColumns));
+    const updatedSquares = reverseColumns(squares);
+    
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares));
     setMoveHistory([...moveHistory, ["Reversed Columns"]]);
   }
 
