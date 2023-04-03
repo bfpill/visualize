@@ -8,7 +8,7 @@ function Square({isHidden, piece, color, row, col, onClickFunction}) {
       const wasCorrect = onClickFunction();
       if(wasCorrect){
         squareStyle = {
-          backgroundColor: "green"
+          backgroundColor: "#77DD77"
         };
           if(color === 'white'){
             e.target.classList.add('white-to-green');

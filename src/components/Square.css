@@ -36,10 +36,10 @@
       background-color: rgb(255, 254, 254);
     }
     50% {
-      background-color:  rgb(89, 130, 66);
+      background-color:  rgb(179, 194, 170);
     }
     100% {
-      background-color: green;
+      background-color: #77dd77;
     }
   }
 
@@ -48,10 +48,10 @@
       background-color: grey;
     }
     50% {
-      background-color:  rgb(94, 140, 69);
+      background-color:  rgb(179, 194, 170);
     }
     100% {
-      background-color: green;
+      background-color: #77dd77;
     }
   }
   
