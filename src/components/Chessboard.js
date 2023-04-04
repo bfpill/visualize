@@ -24,10 +24,9 @@ function Chessboard() {
   const [boardHidden, setBoardHidden] = useState(false);
   const [tilesHidden, setTilesHidden] = useState(false);
   const [numColors, setNumColors] = useState(2);
- 
+  const [colorArr, setColorArr] = useState(getRandomPastelArray(3));
   
   const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen"];
-  let colorArr = getRandomPastelArray(numColors);
 
   //run this after all state / vars has been declared
   const initialBoard = setInitialBoard(boardSize); //array of default square objects formatted with color
@@ -39,8 +38,8 @@ function Chessboard() {
 
   // empty dependency array means this effect runs only once on first render
   useEffect(() => {
-    // Call buildBoardComponents function on the first render
-    setSquares(setInitialBoard(boardSize));
+    //Call buildBoardComponents function on the first render
+    setSquares(initialBoard);
     setBoard(buildBoardComponents(squares));
   }, []);
 
@@ -142,16 +141,20 @@ function Chessboard() {
   }
 
   function handleDecreaseBoardSize(){
-    setEmptyArr(generateEmptyArr(boardSize - 1));
-    setBoardSize(boardSize - 1);
+    if(boardSize >= 2){
+      setEmptyArr(generateEmptyArr(boardSize - 1));
+      setBoardSize(boardSize - 1);
+    }
   }
 
   function handleAddColor(){
+    setColorArr(getRandomPastelArray(numColors + 1))
     setNumColors(numColors + 1);
   }
 
   function handleSubtractColor(){
     if(numColors > 2){
+      setColorArr(getRandomPastelArray(numColors -1))
       setNumColors(numColors - 1);
     }
   }
