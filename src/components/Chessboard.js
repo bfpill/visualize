@@ -33,18 +33,24 @@ function Chessboard() {
   let colorArr = getRandomPastelArray(numColors);
 
   //run this after all state / vars has been declared
-  const initialBoard = setInitalBoard(squares.length); //array of default square objects formatted with color
+  const initialBoard = setInitialBoard(squares.length); //array of default square objects formatted with color
 
   // empty dependency array means this effect runs only once on first render
   useEffect(() => {
     // Call buildBoardComponents function on the first render
-    setSquares(setInitalBoard(5));
+    setSquares(setInitialBoard(5));
     setBoard(buildBoardComponents(squares));
   }, []);
 
   useEffect(() => {
     handleResetBoard();
   }, []);
+
+  useEffect((numColors) => {
+    const updatedSquares = setInitialBoard(5, numColors);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares));
+  }, [numColors]);
 
   useEffect(() => {
     if(addingPieces){
@@ -70,7 +76,7 @@ function Chessboard() {
     return colorArr[index];
   }
 
-  function setInitalBoard(size){
+  function setInitialBoard(size, numColors){
     const initialSquares = emptyArr;
 
     for (let i = 0; i < size; i++) {
@@ -120,24 +126,12 @@ function Chessboard() {
   }
 
   function handleAddColor(){
-    let numColorsCopy = numColors;
-    numColorsCopy ++;
-    setNumColors(numColorsCopy);
-
-    setSquares(initialBoard);
-    setBoard(buildBoardComponents(initialBoard, piecesHidden));
-    setMoveHistory([...moveHistory], numColorsCopy);
+    setNumColors(numColors + 1);
   }
 
   function handleSubtractColor(){
     if(numColors > 2){
-      let numColorsCopy = numColors;
-      numColorsCopy --;
-      setNumColors(numColorsCopy);
-
-      setSquares(initialBoard);
-      setBoard(buildBoardComponents(initialBoard, piecesHidden));
-      setMoveHistory([...moveHistory], numColorsCopy);
+      setNumColors(numColors - 1);
     }
   }
 
@@ -158,7 +152,7 @@ function Chessboard() {
     setTilesHidden(false);
     const updatedSquares = updateProperty(squares, 'isHidden', false);
     setSquares(updatedSquares);
-    setBoard(buildBoardComponents(updatedSquares, piecesHidden));
+    setBoard(buildBoardComponents(updatedSquares));
   }
 
   function handleHideBoard() {
