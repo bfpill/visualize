@@ -6,8 +6,9 @@ function Square({type, isHidden, piece, color, row, col, size, onClickFunction})
 
   let squareStyle = ({
     backgroundColor: isHidden ? "white" : color,
-    width: size,
-    height: size
+    width: size - 2,
+    height: size -2,
+
   });
 
   function handleClick(e) {
@@ -51,7 +52,7 @@ function Square({type, isHidden, piece, color, row, col, size, onClickFunction})
       data-row={row}
       data-col={col}
     >
-      <ChessPiece piece={piece} size={size}/>
+      <ChessPiece piece={piece} size={size -2}/>
     </div>
   )
 }

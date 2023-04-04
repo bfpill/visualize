@@ -88,7 +88,7 @@ function Chessboard() {
 
   function setInitialBoard(size, numColors){
     const initialSquares = emptyArr;
-    const squareSize = (515 / boardSize);
+    const squareSize = (525 / boardSize);
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
         let squareColor;

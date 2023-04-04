@@ -3,7 +3,7 @@ import { useState } from "react";
 
 function ChessPiece({ piece, size }) {
     
-  const [pieceStyle, setPieceStyle] = useState({
+  let pieceStyle = ({
     width: size,
     height: size
   });
