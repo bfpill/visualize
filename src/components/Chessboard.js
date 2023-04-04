@@ -6,16 +6,12 @@ import MoveHistory from "./MoveHistory";
 import getRandomPastelArray from "../functions/getRandomPastel";
 
 import "./Chessboard.css";
+import { render } from "@testing-library/react";
 function Chessboard() {
   const [moveHistory, setMoveHistory] = useState([]);
 
-  const emptyArr = [
-    ["none", "none", "none", "none", "none"],
-    ["none", "none", "none", "none", "none"],
-    ["none", "none", "none", "none", "none"],
-    ["none", "none", "none", "none", "none"],
-    ["none", "none", "none", "none", "none"],
-  ];
+  const [boardSize, setBoardSize] = useState(5);
+  const [emptyArr, setEmptyArr] = useState(generateEmptyArr(boardSize));
 
   const [greenSquares, setGreenSquares] = useState(emptyArr);
   const [rows, setRows] = useState(emptyArr);
@@ -28,17 +24,23 @@ function Chessboard() {
   const [boardHidden, setBoardHidden] = useState(false);
   const [tilesHidden, setTilesHidden] = useState(false);
   const [numColors, setNumColors] = useState(2);
+ 
   
   const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen"];
   let colorArr = getRandomPastelArray(numColors);
 
   //run this after all state / vars has been declared
-  const initialBoard = setInitialBoard(squares.length); //array of default square objects formatted with color
+  const initialBoard = setInitialBoard(boardSize); //array of default square objects formatted with color
+
+  function generateEmptyArr(size) {
+    const arr = new Array(size).fill(null).map(() => new Array(size).fill("none"));
+    return arr;
+  }
 
   // empty dependency array means this effect runs only once on first render
   useEffect(() => {
     // Call buildBoardComponents function on the first render
-    setSquares(setInitialBoard(5));
+    setSquares(setInitialBoard(boardSize));
     setBoard(buildBoardComponents(squares));
   }, []);
 
@@ -47,10 +49,18 @@ function Chessboard() {
   }, []);
 
   useEffect((numColors) => {
-    const updatedSquares = setInitialBoard(5, numColors);
+    const updatedSquares = setInitialBoard(boardSize, numColors);
     setSquares(updatedSquares);
     setBoard(buildBoardComponents(updatedSquares));
+    setMoveHistory([]);
   }, [numColors]);
+
+  useEffect((boardSize) => {
+    const updatedSquares = setInitialBoard(boardSize, numColors);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares));
+    setMoveHistory([]);
+  }, [boardSize]);
 
   useEffect(() => {
     if(addingPieces){
@@ -78,7 +88,7 @@ function Chessboard() {
 
   function setInitialBoard(size, numColors){
     const initialSquares = emptyArr;
-
+    const squareSize = (515 / boardSize);
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
         let squareColor;
@@ -93,6 +103,7 @@ function Chessboard() {
             color: 'none',
           },
           type: 'unclicked',
+          size: squareSize,
           isHidden: false,
           color: getRandomPastel(numColors),
           row : i,
@@ -123,6 +134,16 @@ function Chessboard() {
         return sqCopy;
       }
     ))
+  }
+
+  function handleIncreaseBoardSize(){
+    setEmptyArr(generateEmptyArr(boardSize + 1));
+    setBoardSize(boardSize + 1);
+  }
+
+  function handleDecreaseBoardSize(){
+    setEmptyArr(generateEmptyArr(boardSize - 1));
+    setBoardSize(boardSize - 1);
   }
 
   function handleAddColor(){
@@ -247,13 +268,14 @@ function Chessboard() {
       name: pieceName,
       color: pieceColor
     }
+
     addPiece(piece);
     setBoard(buildBoardComponents(squares));
   }
 
   function addPiece(piece) {
     // Create an array to store empty indices
-    const emptyIndexes = findEmptyIndexs(5);
+    const emptyIndexes = findEmptyIndexs(boardSize);
 
     if(!emptyIndexes){
       setMoveHistory([...moveHistory, ["Board is full"]]);
@@ -270,7 +292,7 @@ function Chessboard() {
       //const index = [(randCol + 1) , (squares.length - randRow )];
       setSquares(updateSquares(randRow, randCol, sq));
       const humanCol = randCol + 1;
-      const humanRow = 5 - (randRow );
+      const humanRow = boardSize - (randRow );
       setMoveHistory([...moveHistory, [sq.piece.name, [humanCol, humanRow]]]);
       return true;
     }
@@ -312,12 +334,13 @@ function Chessboard() {
 
   function buildBoardComponents(arr) {
     const retArr = [];
-    for (let i = 0; i < arr.length; i++) {
-      for (let j = 0; j < arr.length; j++) {
+    for (let i = 0; i < boardSize; i++) {
+      for (let j = 0; j < boardSize; j++) {
         const sq = arr[i][j];
         retArr.push(
             <Square
               type = {sq.type}
+              size = {sq.size}
               isHidden={sq.isHidden}
               piece = {sq.piece}
               color = {sq.color}
@@ -346,6 +369,13 @@ function Chessboard() {
       </div>
 
       <div className="bottom-container">
+      <button onClick={handleIncreaseBoardSize} className="button">
+           + Size
+        </button>
+
+        <button onClick={handleDecreaseBoardSize} className="button">
+           - Size
+        </button>
       <button onClick={handleAddColor} className="button">
           + Color
         </button>
