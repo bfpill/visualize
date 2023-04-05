@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import ChessPiece from "./ChessPiece";
 import "./Square.css"
+import CheckmarkInCorner from './Checkmark';
 
-function Square({type, isHidden, piece, color, row, col, size, onClickFunction}) {
+function Square({type, isHidden, piece, isPastel, pastelColor, chessColor, row, col, size, onClickFunction}) {
 
+  let color = isPastel ? pastelColor : chessColor
+  let width = isPastel ? size -2 : size;
+  let border = isPastel ? '1px solid white' : '0px';
   let squareStyle = ({
+    color: color,
     backgroundColor: isHidden ? "white" : color,
-    width: size - 2,
-    height: size -2,
-
+    width: width,
+    height: width,
+    border: border,
   });
 
   function handleClick(e) {
@@ -19,18 +24,6 @@ function Square({type, isHidden, piece, color, row, col, size, onClickFunction})
         width: size,
         height: size
       });
-      if (color === 'white') {
-        e.target.classList.add('white-to-green');
-        setTimeout(() => {
-          e.target.classList.remove('white-to-green');
-        }, 200);
-      } else if (color === 'grey') {
-        e.target.classList.add('black-to-green');
-        setTimeout(() => {
-          e.target.classList.remove('black-to-green');
-        }, 200);
-      }
-    } else {
       if (color === 'white') {
         e.target.classList.add('white-square-wrong');
         setTimeout(() => {
@@ -52,7 +45,10 @@ function Square({type, isHidden, piece, color, row, col, size, onClickFunction})
       data-row={row}
       data-col={col}
     >
-      <ChessPiece piece={piece} size={size -2}/>
+      <ChessPiece piece={piece} size={isPastel ? size -2 : size}/>
+    { 
+      type.clicked === "correct" ? <CheckmarkInCorner size={size} /> : null
+    }
     </div>
   )
 }

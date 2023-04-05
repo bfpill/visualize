@@ -6,7 +6,7 @@ import MoveHistory from "./MoveHistory";
 import getRandomPastelArray from "../functions/getRandomPastel";
 
 import "./Chessboard.css";
-import { render } from "@testing-library/react";
+
 function Chessboard() {
   const [moveHistory, setMoveHistory] = useState([]);
 
@@ -15,7 +15,6 @@ function Chessboard() {
 
   const [greenSquares, setGreenSquares] = useState(emptyArr);
   const [rows, setRows] = useState(emptyArr);
-  const [squares, setSquares] = useState(emptyArr);
   const [board, setBoard] = useState([[]]);
 
   const [addingPieces, setAddingPieces] = useState(false);
@@ -24,12 +23,14 @@ function Chessboard() {
   const [boardHidden, setBoardHidden] = useState(false);
   const [tilesHidden, setTilesHidden] = useState(false);
   const [numColors, setNumColors] = useState(2);
-  const [colorArr, setColorArr] = useState(getRandomPastelArray(3));
-  
+  const [colorArr, setColorArr] = useState(getRandomPastelArray(2));
+  const [initialBoard, setInitialBoard] = useState(emptyArr);
+  const [squares, setSquares] = useState(emptyArr);
+  const [usingPastel, setUsingPastel] = useState(false);
   const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen"];
 
   //run this after all state / vars has been declared
-  const initialBoard = setInitialBoard(boardSize); //array of default square objects formatted with color
+  //array of default square objects formatted with color
 
   function generateEmptyArr(size) {
     const arr = new Array(size).fill(null).map(() => new Array(size).fill("none"));
@@ -38,28 +39,37 @@ function Chessboard() {
 
   // empty dependency array means this effect runs only once on first render
   useEffect(() => {
+    setInitialBoard(buildInitialSquares(boardSize, numColors));
     //Call buildBoardComponents function on the first render
     setSquares(initialBoard);
-    setBoard(buildBoardComponents(squares));
+    setBoard(buildBoardComponents(squares)); //setBoard needs to be passed JSX components
   }, []);
 
   useEffect(() => {
-    handleResetBoard();
+   handleResetBoard();
   }, []);
 
-  useEffect((numColors) => {
-    const updatedSquares = setInitialBoard(boardSize, numColors);
+  useEffect(() => {
+    const updatedSquares = buildInitialSquares(boardSize, numColors, usingPastel);
+    setInitialBoard(updatedSquares);
     setSquares(updatedSquares);
+     /* im thinking that because this calls the rerender,
+      as long as it is last in the list of setting and updating state, everything will be alright */
     setBoard(buildBoardComponents(updatedSquares));
-    setMoveHistory([]);
   }, [numColors]);
 
-  useEffect((boardSize) => {
-    const updatedSquares = setInitialBoard(boardSize, numColors);
+  useEffect(() => {
+    const updatedSquares = buildInitialSquares(boardSize, numColors, usingPastel);
+    setInitialBoard(updatedSquares);
     setSquares(updatedSquares);
     setBoard(buildBoardComponents(updatedSquares));
-    setMoveHistory([]);
   }, [boardSize]);
+
+  useEffect(() => {
+    const updatedSquares = updateProperty(squares, 'isPastel', usingPastel);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares));
+  }, [usingPastel])
 
   useEffect(() => {
     if(addingPieces){
@@ -85,15 +95,15 @@ function Chessboard() {
     return colorArr[index];
   }
 
-  function setInitialBoard(size, numColors){
+  function buildInitialSquares(size, numColors, isPastel){
     const initialSquares = emptyArr;
-    const squareSize = (525 / boardSize);
+    const squareSize = (525 / size);
     for (let i = 0; i < size; i++) {
       for (let j = 0; j < size; j++) {
-        let squareColor;
-        squareColor = 
-        (cornerColor === "white" ? (i + j) % 2 === 0 ? "white" : "grey"
-          : (i + j + 1) % 2 === 0 ? "grey" : "white");
+        let squareIsEven;
+        squareIsEven = 
+        (cornerColor === "white" ? (i + j) % 2 === 0 ? 'white' : 'grey'
+          : (i + j + 1) % 2 === 0 ? 'grey' : 'white');
       
         const sq = {
           piece: {
@@ -101,10 +111,14 @@ function Chessboard() {
             name: 'none',
             color: 'none',
           },
-          type: 'unclicked',
+          type: {
+            clicked: 'unclicked',
+            isPastel: isPastel,
+          },
+          chessColor: squareIsEven,
+          pastelColor: getRandomPastel(numColors),
           size: squareSize,
           isHidden: false,
-          color: getRandomPastel(numColors),
           row : i,
           col : j,
         }
@@ -112,6 +126,14 @@ function Chessboard() {
       }
     }
     return initialSquares;
+  }
+
+  function handleChangeBoardSurface(){
+    const updatedIsPastel = !usingPastel;
+    setUsingPastel(updatedIsPastel);
+    const updatedSquares = updateProperty(squares, 'isPastel', updatedIsPastel);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares));
   }
 
   function updateProperty(arr, propName, propValue) {
@@ -153,13 +175,14 @@ function Chessboard() {
   }
 
   function handleSubtractColor(){
-    if(numColors > 2){
+    if(numColors > 1){
       setColorArr(getRandomPastelArray(numColors -1))
       setNumColors(numColors - 1);
     }
   }
 
   function handleResetBoard(){
+    setInitialBoard(buildInitialSquares(boardSize, numColors));
     setSquares(initialBoard);
     setMoveHistory([]);
     setBoard(buildBoardComponents(initialBoard));
@@ -233,7 +256,7 @@ function Chessboard() {
   function handleFlipBoard() {
     // I have no idea why setSquares has to be called twice.. but ... it doesnt seem to cause any harm.. 
     let updatedSquares = reverseColumns(squares); 
-    
+
     setSquares(updatedSquares);
     updatedSquares = reverseRows(updatedSquares); //finish it off with horiztontal bludgeon 
 
@@ -244,7 +267,8 @@ function Chessboard() {
   }
 
   function handleReverseRows() {
-    const updatedSquares = reverseRows(squares);
+    let updatedSquares = updatePiecesHidden(squares, piecesHidden);
+    updatedSquares = reverseRows(squares);
 
     setSquares(updatedSquares);
     setBoard(buildBoardComponents(updatedSquares));
@@ -252,8 +276,9 @@ function Chessboard() {
   }
 
   function handleReverseColumns() {
-    const updatedSquares = reverseColumns(squares);
-
+    let updatedSquares = updatePiecesHidden(squares, piecesHidden);
+    updatedSquares = reverseColumns(squares);
+    
     setSquares(updatedSquares);
     setBoard(buildBoardComponents(updatedSquares));
     setMoveHistory([...moveHistory, ["Reversed Columns"]]);
@@ -262,7 +287,7 @@ function Chessboard() {
   function handleAddPiece() {
     //Select a random index from Pieces[]
     setAddingPieces(true);
-
+    
     const pieceName = pieces[Math.floor(Math.random() * pieces.length)];
     const pieceColor = Math.floor(Math.random() * 2) === 0 ? "black" : "white";
 
@@ -272,8 +297,9 @@ function Chessboard() {
       color: pieceColor
     }
 
-    addPiece(piece);
-    setBoard(buildBoardComponents(squares));
+    const updatedSquares = addPiece(piece);
+    setSquares(updatedSquares);
+    setBoard(buildBoardComponents(updatedSquares));
   }
 
   function addPiece(piece) {
@@ -287,17 +313,17 @@ function Chessboard() {
       // Select a random empty index and set it to the given value
       const [randRow, randCol] =
       emptyIndexes[Math.floor(Math.random() * emptyIndexes.length)];
-  
+      
       let sq = squares[randRow][randCol];
   
       sq.piece = piece;
   
       //const index = [(randCol + 1) , (squares.length - randRow )];
-      setSquares(updateSquares(randRow, randCol, sq));
+      const updatedSquares = updateSquares(squares, randRow, randCol, sq);
       const humanCol = randCol + 1;
       const humanRow = boardSize - (randRow );
       setMoveHistory([...moveHistory, [sq.piece.name, [humanCol, humanRow]]]);
-      return true;
+      return updatedSquares;
     }
     return false;
   }
@@ -306,7 +332,7 @@ function Chessboard() {
     if(squareContainsPiece(row, col)){
       const sq = squares[row][col];
       sq.type = 'correct';
-      const updatedSquares = updateSquares(row, col, sq);
+      const updatedSquares = updateSquares(squares, row, col, sq);
       setSquares(updatedSquares);
       //essential to pass updatedSquares as this avoid asynchronous state tomfoolery
       setBoard(buildBoardComponents(updatedSquares)); 
@@ -328,11 +354,11 @@ function Chessboard() {
     return newArr;
   }
 
-  function updateSquares(row, col, sq){
-    const squaresCopy = copyArrayOfObjects(squares); //state variable
-    squaresCopy[row][col] = sq;
+  function updateSquares(arr, row, col, sq){
+    const arrCopy = copyArrayOfObjects(arr); //state variable
+    arrCopy[row][col] = sq;
 
-    return squaresCopy;
+    return arrCopy;
   }
 
   function buildBoardComponents(arr) {
@@ -346,7 +372,9 @@ function Chessboard() {
               size = {sq.size}
               isHidden={sq.isHidden}
               piece = {sq.piece}
-              color = {sq.color}
+              isPastel = {sq.isPastel}
+              pastelColor = {sq.pastelColor}
+              chessColor = {sq.chessColor}
               row = {sq.row}
               col = {sq.col}
               onClickFunction = {() => handleSquareClick(i, j)}
@@ -372,10 +400,18 @@ function Chessboard() {
       </div>
 
       <div className="bottom-container">
+      {usingPastel ? (
+          <button onClick={handleChangeBoardSurface} className="button">
+            Use Chess Board
+          </button>
+        ) : (
+          <button onClick={handleChangeBoardSurface} className="button">
+            Use Pastel Board
+          </button>
+        )}
       <button onClick={handleIncreaseBoardSize} className="button">
            + Size
         </button>
-
         <button onClick={handleDecreaseBoardSize} className="button">
            - Size
         </button>
