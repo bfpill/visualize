@@ -6,7 +6,7 @@ function Navbar() {
   return (
     <nav className="navbar">
         <Link onClick={""} to="/" className='nav-link'>Chess</Link>
-        <Link onClick={""} to="/About" className='nav-link'>Visualize</Link>
+        <Link onClick={""} to="/About" className='nav-link'>About</Link>
     </nav>
   );
 }

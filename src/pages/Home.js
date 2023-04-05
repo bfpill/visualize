@@ -6,7 +6,7 @@ function Home() {
   return (
     <div className="home">
       <div className="titleContainer">
-        <h1>Visualize Practice</h1>
+        <h1>Visualization Practice</h1>
       </div>
       <DndProvider backend={HTML5Backend}>
         <Chessboard />

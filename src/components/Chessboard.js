@@ -184,7 +184,7 @@ function Chessboard() {
   }
 
   function handleResetBoard(){
-    setInitialBoard(buildInitialSquares(boardSize, numColors));
+    setInitialBoard(buildInitialSquares(boardSize, numColors, usingPastel));
     setSquares(initialBoard);
     setMoveHistory([]);
     setBoard(buildBoardComponents(initialBoard));
