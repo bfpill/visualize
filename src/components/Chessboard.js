@@ -53,6 +53,7 @@ function Chessboard() {
     const updatedSquares = buildInitialSquares(boardSize, numColors, usingPastel);
     setInitialBoard(updatedSquares);
     setSquares(updatedSquares);
+    setMoveHistory([]);
      /* im thinking that because this calls the rerender,
       as long as it is last in the list of setting and updating state, everything will be alright */
     setBoard(buildBoardComponents(updatedSquares));
@@ -62,6 +63,7 @@ function Chessboard() {
     const updatedSquares = buildInitialSquares(boardSize, numColors, usingPastel);
     setInitialBoard(updatedSquares);
     setSquares(updatedSquares);
+    setMoveHistory([]);
     setBoard(buildBoardComponents(updatedSquares));
   }, [boardSize]);
 
@@ -113,8 +115,8 @@ function Chessboard() {
           },
           type: {
             clicked: 'unclicked',
-            isPastel: isPastel,
           },
+          isPastel: isPastel,
           chessColor: squareIsEven,
           pastelColor: getRandomPastel(numColors),
           size: squareSize,
@@ -415,10 +417,10 @@ function Chessboard() {
         <button onClick={handleDecreaseBoardSize} className="button">
            - Size
         </button>
-      <button onClick={handleAddColor} className="button">
+      <button onClick={usingPastel ? handleAddColor : null} className="button" style={{color : usingPastel ? 'black' : 'red', textDecoration : usingPastel ? '' : 'line-through', fontStyle : usingPastel ? '' : 'italic'}}>
           + Color
         </button>
-        <button onClick={handleSubtractColor} className="button">
+        <button onClick={usingPastel ? handleSubtractColor : null} className="button" style={{color : usingPastel ? 'black' : 'red', textDecoration : usingPastel ? '' : 'line-through', fontStyle : usingPastel ? '' : 'italic'}}>
           - Color
         </button>
         <button onClick={handleReverseRows} className="button">
