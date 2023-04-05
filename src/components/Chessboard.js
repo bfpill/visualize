@@ -4,7 +4,7 @@ import addPieceSound from '../sounds/move-self.mp3'
 import click from '../sounds/click.wav'
 import MoveHistory from "./MoveHistory";
 import getRandomPastelArray from "../functions/getRandomPastel";
-
+import Game from "./Game";
 import "./Chessboard.css";
 
 function Chessboard() {
@@ -27,7 +27,7 @@ function Chessboard() {
   const [initialBoard, setInitialBoard] = useState(emptyArr);
   const [squares, setSquares] = useState(emptyArr);
   const [usingPastel, setUsingPastel] = useState(false);
-  const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen"];
+  const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen", "King"];
 
   //run this after all state / vars has been declared
   //array of default square objects formatted with color
@@ -331,13 +331,19 @@ function Chessboard() {
   }
   
   function handleSquareClick(row, col){
+    const sq = squares[row][col];
+    sq.type.isShowingOptions = true;
+    const updatedSquares = updateSquares(squares, row, col, sq);
+    setBoard(buildBoardComponents(updatedSquares)); 
+
     if(squareContainsPiece(row, col)){
-      const sq = squares[row][col];
-      sq.type.clicked = 'correct';
-      const updatedSquares = updateSquares(squares, row, col, sq);
-      setSquares(updatedSquares);
-      //essential to pass updatedSquares as this avoid asynchronous state tomfoolery
-      setBoard(buildBoardComponents(updatedSquares)); 
+      if(sq.type.clicked !== "correct"){
+        sq.type.clicked = 'correct';
+        const updatedSquares = updateSquares(squares, row, col, sq);
+        setSquares(updatedSquares);
+        //essential to pass updatedSquares as this avoid asynchronous state tomfoolery
+        setBoard(buildBoardComponents(updatedSquares)); 
+      }
       return true; //Square.js uses this return internally to render animations
     }
     return false;
@@ -390,6 +396,7 @@ function Chessboard() {
   return (
     <>
       <div className="sideBySide">
+        <Game />
         <div className="chessBoardContainer">
           {boardHidden ? (
             <div className="hiddenBoard" />

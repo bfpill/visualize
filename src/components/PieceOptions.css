@@ -1,0 +1,8 @@
+    .piece-options-container {
+        height: 185px;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }

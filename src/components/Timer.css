@@ -1,0 +1,22 @@
+.DigitalClock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .DigitalClock-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    border-radius: 10px;
+  }
+  
+  .DigitalClock-time {
+    font-size: 24px;
+    color: white;
+  }
+  

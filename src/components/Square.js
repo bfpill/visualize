@@ -16,23 +16,32 @@ function Square({type, isHidden, piece, isPastel, pastelColor, chessColor, row, 
     border: border,
   });
 
+  let showingOptionsStyle = ({
+    color: color,
+    backgroundColor: isHidden ? "white" : (type.clicked === "correct" ? '#77DD77' : color),
+    width: width,
+    height: width,
+    border: border,
+  });
+
   function handleClick(e) {
     const wasCorrect = onClickFunction(); //dont need now but good for callbacks
   }
 
   return (
-    <div className="square"
-      style={squareStyle}
-      onClick={handleClick}
-      data-row={row}
-      data-col={col}
-    >
-      <ChessPiece piece={piece} size={isPastel ? size -2 : size}/>
-    { 
-      type.clicked === "correct" ? <CheckmarkInCorner size={size} /> : null
-    }
-    </div>
-  )
-}
+      <div className="square"
+        style={squareStyle}
+        onClick={handleClick}
+        data-row={row}
+        data-col={col}
+      >
+        <ChessPiece piece={piece} size={isPastel ? size -2 : size}/>
+      { 
+        type.clicked === "correct" ? <CheckmarkInCorner size={size} /> : null
+      }
+      </div>
+    )
+  }
+
 
 export default Square;

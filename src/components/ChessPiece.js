@@ -1,12 +1,12 @@
 import "./ChessPiece.css";
-import { useState } from "react";
 
-function ChessPiece({ piece, size }) {
-    
-  let pieceStyle = ({
-    width: size,
-    height: size
-  });
+function ChessPiece({ type, piece, size }) {
+  let pieceStyle;
+
+    pieceStyle = ({
+      width: size,
+      height: size
+    });
 
   if (!piece.isHidden) {
     if (piece.color === "white") {
@@ -15,6 +15,16 @@ function ChessPiece({ piece, size }) {
           <img
             classname={piece.name}
             src={require("../svgs/WhiteQueen.svg").default}
+            style={pieceStyle}
+            draggable={true}
+          />
+        );
+      }
+      if (piece.name === "King") {
+        return (
+          <img
+            classname={piece.name}
+            src={require("../svgs/WhiteKing.svg").default}
             style={pieceStyle}
             draggable={true}
           />
@@ -69,6 +79,16 @@ function ChessPiece({ piece, size }) {
             classname={piece.name}
             src={require("../svgs/BlackQueen.svg").default}
             style={pieceStyle}
+          />
+        );
+      }
+      if (piece.name === "King") {
+        return (
+          <img
+            classname={piece.name}
+            src={require("../svgs/BlackKing.svg").default}
+            style={pieceStyle}
+            draggable={true}
           />
         );
       }
