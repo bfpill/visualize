@@ -10,32 +10,14 @@ function Square({type, isHidden, piece, isPastel, pastelColor, chessColor, row, 
   let border = isPastel ? '1px solid white' : '0px';
   let squareStyle = ({
     color: color,
-    backgroundColor: isHidden ? "white" : color,
+    backgroundColor: isHidden ? "white" : (type.clicked === "correct" ? '#77DD77' : color),
     width: width,
     height: width,
     border: border,
   });
 
   function handleClick(e) {
-    const wasCorrect = onClickFunction();
-    if (wasCorrect) {
-      squareStyle = ({
-        backgroundColor: "#77DD77",
-        width: size,
-        height: size
-      });
-      if (color === 'white') {
-        e.target.classList.add('white-square-wrong');
-        setTimeout(() => {
-          e.target.classList.remove('white-square-wrong');
-        }, 200);
-      } else if (color === 'grey') {
-        e.target.classList.add('black-square-wrong');
-        setTimeout(() => {
-          e.target.classList.remove('black-square-wrong');
-        }, 200);
-      }
-    }
+    const wasCorrect = onClickFunction(); //dont need now but good for callbacks
   }
 
   return (

@@ -333,7 +333,7 @@ function Chessboard() {
   function handleSquareClick(row, col){
     if(squareContainsPiece(row, col)){
       const sq = squares[row][col];
-      sq.type = 'correct';
+      sq.type.clicked = 'correct';
       const updatedSquares = updateSquares(squares, row, col, sq);
       setSquares(updatedSquares);
       //essential to pass updatedSquares as this avoid asynchronous state tomfoolery
